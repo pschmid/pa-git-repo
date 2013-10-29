@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fiuba.pyp</groupId>
+  <artifactId>pyp</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <name>PyP </name>
+
+  <organization>
+    <name>Facultad de Ingenieria</name>
+    <url>http://www.fi.uba.ar</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>pablo</id>
+      <name>Pablo Hernan Schmid</name>
+      <email>schmidpablo@gmail.com</email>
+      <url/>
+      <organization/>
+      <organizationUrl/>
+      <roles/>
+      <timezone/>
+      <properties>
+        <key>value</key>
+      </properties>
+    </developer>
+    <developer>
+      <id>paulo</id>
+      <name>Paulo Dellanzo</name>
+      <email/>
+      <url/>
+      <organization/>
+      <organizationUrl/>
+      <roles/>
+      <timezone/>
+      <properties>
+        <key>value</key>
+      </properties>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>main</module>
+  </modules>
+</project>

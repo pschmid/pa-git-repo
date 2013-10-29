@@ -8,47 +8,28 @@
   <artifactId>main</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>
-  <name>PyP Main Pom</name>
+  <name>PyP Main</name>
 
-  <organization>
-    <name>Facultad de Ingenieria</name>
-    <url>http://www.fi.uba.ar</url>
-  </organization>
+    <parent>
+        <groupId>fiuba.pyp</groupId>
+        <artifactId>main</artifactId>
+        <version>1.0</version>
+    </parent>
 
-  <developers>
-    <developer>
-      <id>pablo</id>
-      <name>Pablo Hernan Schmid</name>
-      <email>schmidpablo@gmail.com</email>
-      <url/>
-      <organization/>
-      <organizationUrl/>
-      <roles/>
-      <timezone/>
-      <properties>
-        <key>value</key>
-      </properties>
-    </developer>
-    <developer>
-      <id>paulo</id>
-      <name>Paulo Dellanzo</name>
-      <email/>
-      <url/>
-      <organization/>
-      <organizationUrl/>
-      <roles/>
-      <timezone/>
-      <properties>
-        <key>value</key>
-      </properties>
-    </developer>
-  </developers>
 
   <modules>
     <module>modules</module>
   </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+      		<version>3.8.1</version>
+      		<scope>test</scope>
+            </dependency>
+        <dependencies>
+    <dependencyManagement>
+
 </project>
-
-
-
-

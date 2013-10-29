@@ -2,39 +2,27 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>fiuba.pyp</groupId>
-    <artifactId>main</artifactId>
-    <version>1.0</version>
-  </parent>
+#  <parent>
+#    <groupId>fiuba.pyp</groupId>
+#    <artifactId>main</artifactId>
+#    <version>1.0</version>
+#  </parent>
+
+    <parent>
+        <groupId>fiuba.pyp</groupId>
+        <artifactId>bpm-parent</artifactId>
+        <version>1.0</version>
+        <relativePath>parent/pom.xml</relativePath>
+    </parent>
+
   <artifactId>modules</artifactId>
   <packaging>pom</packaging>
 
   <name>PyP Modules</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <modules>
     <module>model</module>
   </modules>
 
-  <build>
-    <pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-    </plugins>
-    </pluginManagement>
-  </build>
 
 </project>
-
-
