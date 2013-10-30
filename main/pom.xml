@@ -10,11 +10,11 @@
   <packaging>pom</packaging>
   <name>PyP Main</name>
 
-    <parent>
+   <parent>
         <groupId>fiuba.pyp</groupId>
-        <artifactId>main</artifactId>
+        <artifactId>pyp</artifactId>
         <version>1.0</version>
-    </parent>
+   </parent>
 
 
   <modules>
@@ -29,7 +29,7 @@
       		<version>3.8.1</version>
       		<scope>test</scope>
             </dependency>
-        <dependencies>
-    <dependencyManagement>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
