@@ -14,9 +14,13 @@
 
   <name>PyP Modules</name>
 
-  <modules>
-    <module>model</module>
-  </modules>
+    <modules>
+        <module>model</module>
+        <module>dist</module>
+        <module>engine</module>
+        <module>adapter</module>
+    </modules>
+
 
 
 </project>
