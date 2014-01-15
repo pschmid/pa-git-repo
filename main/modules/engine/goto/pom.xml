@@ -4,15 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
     <parent>
         <groupId>fiuba.pyp</groupId>
-        <artifactId>modules</artifactId>
+        <artifactId>engine</artifactId>
         <version>1.0</version>
     </parent>
 
+
     <groupId>fiuba.pyp</groupId>
-    <artifactId>adapter</artifactId>
+    <artifactId>engine.goto</artifactId>
+    <name>Engine: algoritmo GOTO</name>
     <version>1.0</version>
+
 
     
 </project>

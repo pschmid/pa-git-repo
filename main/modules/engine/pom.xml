@@ -10,9 +10,14 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>fiuba.pyp</groupId>
+
     <artifactId>engine</artifactId>
+    <packaging>pom</packaging>
     <version>1.0</version>
+
+    <modules>
+        <module>goto</module>
+    </modules>
 
     
 </project>

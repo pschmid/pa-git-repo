@@ -1,19 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>fiuba.pyp</artifactId>
-        <groupId>modules</groupId>
+        <groupId>fiuba.pyp</groupId>
+        <artifactId>modules</artifactId>
         <version>1.0</version>
     </parent>
 
-
     <artifactId>dist</artifactId>
-    <packaging>jar</packaging>
 
+    <packaging>pom</packaging>
 
+    <name>Studio: JDev.Dist</name>
+    <description>
+        The module dist is the responsible of distribute all the
+        modules of the framework
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>fiuba.pyp</groupId>
+            <artifactId>engine.goto</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>fiuba.pyp</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
-
-
