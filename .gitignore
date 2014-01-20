@@ -19,5 +19,7 @@ tmp/
 *.merging.sav
 .idea/
 .data/
-
-
+*.settings
+.gitignore
+.metadata
+/bin
