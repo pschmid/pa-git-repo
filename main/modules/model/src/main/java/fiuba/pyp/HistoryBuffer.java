@@ -3,7 +3,7 @@
  */
 package fiuba.pyp;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author pyp
@@ -11,12 +11,20 @@ import java.util.List;
  */
 public class HistoryBuffer {
 	
-	private List<Operation> buffer;
+	private ArrayList<Operation> buffer;
 	
+	/**
+	 * @Creats the History Buffer
+	 */
+	public HistoryBuffer() {
+		super();
+		this.buffer = new ArrayList<Operation>();
+	}
+
 	/**
 	 * @param buffer
 	 */
-	public HistoryBuffer(List<Operation> buffer) {
+	public HistoryBuffer(ArrayList<Operation> buffer) {
 		super();
 		this.buffer = buffer;
 	}
@@ -24,14 +32,14 @@ public class HistoryBuffer {
 	/**
 	 * @return the buffer
 	 */
-	public List<Operation> getBuffer() {
+	public ArrayList<Operation> getBuffer() {
 		return buffer;
 	}
 
 	/**
 	 * @param buffer the buffer to set
 	 */
-	public void setBuffer(List<Operation> buffer) {
+	public void setBuffer(ArrayList<Operation> buffer) {
 		this.buffer = buffer;
 	}
 
