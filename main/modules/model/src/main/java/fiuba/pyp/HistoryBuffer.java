@@ -14,7 +14,7 @@ public class HistoryBuffer {
 	private ArrayList<Operation> buffer;
 	
 	/**
-	 * @Creats the History Buffer
+	 * Creates the History Buffer
 	 */
 	public HistoryBuffer() {
 		super();

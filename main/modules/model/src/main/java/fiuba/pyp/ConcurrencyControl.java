@@ -4,6 +4,10 @@
 package fiuba.pyp;
 
 /**
+ *
+ * Controls the Concurrency<br>
+ * Implements Singleton
+ * 
  * @author pyp
  *
  */
@@ -28,12 +32,12 @@ public class ConcurrencyControl {
         return INSTANCE;
     }
     
-    public void initialize(){
-    	this.buffer = new HistoryBuffer();
+    private void initialize(){
+    	this.algorithm = new GOTOAlgorithm();
     }
-
-	private Document doc;
-	private HistoryBuffer buffer;
+    
+    private Document doc;
+	private AlgorithmControl algorithm;
 	
 	/**
 	 * @return the doc
@@ -49,9 +53,8 @@ public class ConcurrencyControl {
 		this.doc = doc;
 	}
 
-	public synchronized void sendOperation(Operation op){
-		op.execute(doc);
-		buffer.add(op);
+	public synchronized void run(Operation op){
+		algorithm.run(op, this.doc);
 	}
 	
 }
