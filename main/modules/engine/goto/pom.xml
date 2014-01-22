@@ -14,7 +14,7 @@
 
     <groupId>fiuba.pyp</groupId>
     <artifactId>engine.goto</artifactId>
-    <name>Engine: algoritmo GOTO</name>
+    <name>PyP Engine: algoritmo GOTO</name>
     <version>1.0</version>
 
 

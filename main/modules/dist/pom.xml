@@ -12,7 +12,7 @@
 
     <packaging>pom</packaging>
 
-    <name>Studio: JDev.Dist</name>
+    <name>PyP: Dist</name>
     <description>
         The module dist is the responsible of distribute all the
         modules of the framework

@@ -9,9 +9,11 @@
   </parent>
 
   <artifactId>model</artifactId>
+  <version>1.0</version>
+
   <packaging>pom</packaging>
 
-  <name>PyP project model module</name>
+  <name>PyP: Model </name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

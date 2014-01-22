@@ -12,6 +12,7 @@
 
 
     <artifactId>engine</artifactId>
+    <name>PyP: Engine</name>
     <packaging>pom</packaging>
     <version>1.0</version>
 
