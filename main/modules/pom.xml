@@ -16,7 +16,6 @@
   <name>PyP Modules</name>
 
     <modules>
-        <module>model</module>
         <module>dist</module>
         <module>engine</module>
     </modules>
