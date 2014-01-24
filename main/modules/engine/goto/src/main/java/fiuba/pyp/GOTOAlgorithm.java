@@ -24,11 +24,12 @@ public class GOTOAlgorithm extends AlgorithmControl{
 	 * @see fiuba.pyp.AlgorithmControl#run(fiuba.pyp.Operation, fiuba.pyp.Document)
 	 */
 	@Override
-	public void run(Operation op, Document doc) {
+	public Operation run(Operation operation) {
 		// TODO Auto-generated method stub
 		for (Operation opBuffer : this.buffer.getBuffer()){
 			System.out.print(opBuffer.toString()); 
 		}
+		return operation;
 	}
 
 }

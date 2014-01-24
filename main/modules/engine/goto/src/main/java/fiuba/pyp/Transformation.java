@@ -9,8 +9,13 @@ package fiuba.pyp;
  */
 public abstract class Transformation {
 	
-	public Operation transform(Operation op1, Operation op2){
-		return op1;
-	}
+	/**
+	 * Transforms 2 Operations into another Operation O'
+	 * 
+	 * @param op1
+	 * @param op2
+	 * @return O'
+	 */
+	public abstract Operation transform(Operation op1, Operation op2);
 
 }

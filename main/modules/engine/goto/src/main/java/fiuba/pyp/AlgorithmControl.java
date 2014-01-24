@@ -12,6 +12,14 @@ package fiuba.pyp;
  */
 public abstract class AlgorithmControl {
 	
-	public abstract void run(Operation op, Document doc);
+	/**
+	 * 
+	 * Given an Operation returns the Execution form
+	 * of the Operation EO, such that DC(EO) = EC(O) 
+	 * 
+	 * @param op
+	 * @return Transformed Operation
+	 */
+	public abstract Operation run(Operation operation);
 	
 }
