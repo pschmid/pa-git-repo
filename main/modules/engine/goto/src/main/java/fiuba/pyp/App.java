@@ -13,14 +13,14 @@ public class App
 
     public static void main( String[] args )
     {
-        PropertyConfigurator.configure(App.class.getClassLoader().getResource(
-                "log4j.properties"));
-        Logger log = Logger.getLogger(App.class);
+        //PropertyConfigurator.configure(App.class.getClassLoader().getResource(
+        //        "log4j.properties"));
+        //Logger log = Logger.getLogger(App.class);
         System.out.println( "Hello World! Pyp" );
         // Configure Log4J
 
 
-        log.info( "Hello World! Pyp" );
+        //log.info( "Hello World! Pyp" );
 
     }
 }

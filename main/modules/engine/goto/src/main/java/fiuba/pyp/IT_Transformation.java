@@ -4,7 +4,7 @@
 package fiuba.pyp;
 
 /**
- * @author paulo
+ * @author pyp
  *
  */
 public class IT_Transformation extends Transformation {
@@ -14,7 +14,8 @@ public class IT_Transformation extends Transformation {
 	 *
 	 *	Conditions: op2 has already been executed, op1 has not 
 	 *  and its parameters are from the state before op2 was executed
-	 *
+	 *  op1 is executed as if op2 was executed so its included
+	 *  
 	 */
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
@@ -47,6 +48,12 @@ public class IT_Transformation extends Transformation {
 	public Operation IT_InsertDelete(Operation op1, Operation op2) {
 		if (op1.getPosition() <= op2.getPosition())
 			return op1;
+		else{
+			Operation opAux = op1;
+			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
+			return opAux;
+		}
+		/* String-wise
 		else if (op1.getPosition() > op2.getPosition() + op2.getObj().getLength()){
 			Operation opAux = op1;
 			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
@@ -56,7 +63,7 @@ public class IT_Transformation extends Transformation {
 			Operation opAux = op1;
 			opAux.setPosition(op2.getPosition());
 			return opAux;
-		}
+		}*/
 	}
 	
 	public Operation IT_DeleteInsert(Operation op1, Operation op2) {
