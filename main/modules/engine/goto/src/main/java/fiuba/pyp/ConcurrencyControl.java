@@ -55,7 +55,7 @@ public class ConcurrencyControl {
 
 	public synchronized void run(Operation operation){
 		Operation transOp = algorithm.run(operation);
-		transOp.toString();
+		transOp.execute(doc);
 	}
 	
 }

@@ -12,12 +12,12 @@ package fiuba.pyp;
 public abstract class Document {
 
 	
-	/*
-	 * Add a Document Object into the position of the Document by id
+	/**
+	 * Adds a Document Object into the position of the Document by id
 	 */
 	public abstract void addObject(DocumentObject obj, int position, int id);
 	
-	/*
+	/**
 	 * Removes a Document Object into the position of the Document by id
 	 */
 	public abstract void removeObject(DocumentObject obj, int position, int id);

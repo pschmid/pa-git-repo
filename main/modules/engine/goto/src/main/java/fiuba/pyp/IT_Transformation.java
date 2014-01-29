@@ -20,16 +20,16 @@ public class IT_Transformation extends Transformation {
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
-		if (op1.getType().equals("INSERT") && op2.getType().equals("INSERT")){
+		if (op1.isInsert() && op2.isInsert()){
 			return IT_InsertInsert(op1, op2);
 		}
-		else if (op1.getType().equals("INSERT") && op2.getType().equals("DELETE")){
+		else if (op1.isInsert() && op2.isDelete()){
 			return IT_InsertDelete(op1, op2);
 		}
-		else if (op1.getType().equals("DELETE") && op2.getType().equals("INSERT")){
+		else if (op1.isDelete() && op2.isInsert()){
 			return IT_DeleteInsert(op1, op2);
 		}
-		else if (op1.getType().equals("DELETE") && op2.getType().equals("DELETE")){
+		else if (op1.isDelete() && op2.isDelete()){
 			return IT_DeleteDelete(op1, op2);
 		}
 		return null;

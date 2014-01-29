@@ -29,6 +29,7 @@ public class GOTOAlgorithm extends AlgorithmControl{
 		for (Operation opBuffer : this.buffer.getBuffer()){
 			System.out.print(opBuffer.toString()); 
 		}
+		this.buffer.add(operation);
 		return operation;
 	}
 

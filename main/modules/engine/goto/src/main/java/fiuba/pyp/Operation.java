@@ -17,13 +17,21 @@ public class Operation {
 	private String type;
 	
 	public synchronized void execute(Document doc){
-		if(type == "INSERT"){
+		if(this.isInsert()){
 			doc.addObject(obj, position, id);
 		}
-		else if (type == "DELETE"){
+		else if (this.isDelete()){
 			doc.removeObject(obj, position, id);
 		}
 		
+	}
+	
+	public boolean isInsert(){
+		return this.type.equals("INSERT");
+	}
+	
+	public boolean isDelete(){
+		return this.type.equals("DELETE");
 	}
 
 	/**
