@@ -11,7 +11,7 @@ package fiuba.pyp;
  * 
  */
 public abstract class AlgorithmControl {
-	
+
 	/**
 	 * 
 	 * Given an Operation returns the Execution form

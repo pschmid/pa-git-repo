@@ -55,7 +55,22 @@ public class ConcurrencyControl {
 
 	public synchronized void run(Operation operation){
 		Operation transOp = algorithm.run(operation);
-		transOp.execute(doc);
+		execute(transOp);
 	}
+
+    public synchronized void execute(Operation transOp){
+        DocumentObject obj = transOp.getObj();
+        int position = transOp.getPosition();
+        int id = transOp.getId();
+
+
+        if(transOp.isInsert()){
+            doc.addObject(obj, position, id);
+        }
+        else if (transOp.isDelete()){
+            doc.removeObject(obj, position, id);
+        }
+
+    }
 	
 }

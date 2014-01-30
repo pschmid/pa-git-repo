@@ -12,5 +12,6 @@ package fiuba.pyp;
 public abstract class DocumentObject {
 	
 	public abstract int getLength();
+    public abstract String getObj();
 	
 }

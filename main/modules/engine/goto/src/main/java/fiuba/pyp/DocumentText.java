@@ -14,13 +14,23 @@ public class DocumentText extends Document{
 	/* 
 	 * @see fiuba.pyp.Document#addObject(fiuba.pyp.DocumentObject, int, int)
 	 */
-	@Override
+    public DocumentText() {
+        doc = new String();
+    }
+
+
+    @Override
+    public String toString() {
+        return doc;
+    }
+
+    @Override
 	public void addObject(DocumentObject obj, int position, int id) {
 		// TODO Auto-generated method stub
 		String end = doc.substring(position);
 		String result = doc.substring(0, position);
-		result.concat(obj.toString()).concat(end);
-		this.doc = result;
+        result = result + obj.getObj() + end;
+        this.doc = result;
 	}
 
 	/* 

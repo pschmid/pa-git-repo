@@ -10,27 +10,20 @@ package fiuba.pyp;
 public class DocumentCharacter extends DocumentObject{
 
 	private String character;
-	
-	/**
-	 * @return the character
-	 */
-	public String getCharacter() {
+
+
+    public DocumentCharacter(String character) {
+        this.character = character;
+    }
+
+
+    @Override
+	public String getObj() {
 		return character;
 	}
 
-	/**
-	 * @param character the character to set
-	 */
-	public void setCharacter(String character) {
-		this.character = character;
-	}
-
-	/* (non-Javadoc)
-	 * @see fiuba.pyp.DocumentObject#getLength()
-	 */
 	@Override
 	public int getLength() {
-		// TODO Auto-generated method stub
 		return character.length();
 	}
 	

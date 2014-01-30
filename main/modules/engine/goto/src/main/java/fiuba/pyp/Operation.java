@@ -15,17 +15,14 @@ public class Operation {
 	private int position;
 	private int id;
 	private String type;
-	
-	public synchronized void execute(Document doc){
-		if(this.isInsert()){
-			doc.addObject(obj, position, id);
-		}
-		else if (this.isDelete()){
-			doc.removeObject(obj, position, id);
-		}
-		
-	}
-	
+
+    public Operation(DocumentObject object, int pos, int id, String type) {
+        this.obj = object;
+        this.position = pos;
+        this.id = id;
+        this.type = type;
+    }
+
 	public boolean isInsert(){
 		return this.type.equals("INSERT");
 	}
