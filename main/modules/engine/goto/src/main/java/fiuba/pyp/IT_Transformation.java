@@ -3,6 +3,8 @@
  */
 package fiuba.pyp;
 
+import java.util.List;
+
 /**
  * @author pyp
  *
@@ -34,6 +36,12 @@ public class IT_Transformation extends Transformation {
 		}
 		return null;
 	}
+
+    @Override
+    public Operation transform(Operation op1, List<Operation> operationList) {
+
+        return null;
+    }
 
 	public Operation IT_InsertInsert(Operation op1, Operation op2) {
 		if (op1.getPosition() < op2.getPosition())

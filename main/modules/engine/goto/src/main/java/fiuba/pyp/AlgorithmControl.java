@@ -20,6 +20,6 @@ public abstract class AlgorithmControl {
 	 * @param op
 	 * @return Transformed Operation
 	 */
-	public abstract Operation run(Operation operation);
+	public abstract Operation run(Operation operation, HistoryBuffer historyBuffer);
 	
 }

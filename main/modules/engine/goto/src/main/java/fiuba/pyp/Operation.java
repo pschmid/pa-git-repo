@@ -13,14 +13,16 @@ public class Operation {
 	
 	private DocumentObject obj;
 	private int position;
-	private int id;
 	private String type;
+    private int userId;
+    private int timeStamp;
 
-    public Operation(DocumentObject object, int pos, int id, String type) {
+    public Operation(DocumentObject object, int pos, String type,int userId, int timeStamp) {
         this.obj = object;
         this.position = pos;
-        this.id = id;
         this.type = type;
+        this.userId = userId;
+        this.timeStamp = timeStamp;
     }
 
 	public boolean isInsert(){
@@ -63,14 +65,14 @@ public class Operation {
 	 * @return the id
 	 */
 	public int getId() {
-		return id;
+		return userId;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
-		this.id = id;
+		this.userId = id;
 	}
 
 	/**
@@ -86,5 +88,14 @@ public class Operation {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
+    public boolean isIndependent(Operation operation) {
+
+        return false;
+    }
+
+    public boolean isCausallyPreceding(Operation operation) {
+        return false;
+
+    }
 }

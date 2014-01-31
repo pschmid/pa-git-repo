@@ -16,11 +16,11 @@ public class App
         PropertyConfigurator.configure(App.class.getClassLoader().getResource(
                 "log4j.properties"));
         Logger log = Logger.getLogger(App.class);
-        System.out.println( "Hello World! Pyp" );
+        System.out.println("Hello World! Pyp");
         // Configure Log4J
         ConcurrencyControl concurrencyControl = ConcurrencyControl.getInstance();
         concurrencyControl.setDoc(new DocumentText());
-        concurrencyControl.run(new Operation(new DocumentCharacter("a"),0,123,"INSERT"));
+        concurrencyControl.run(new Operation(new DocumentCharacter("a"),0,"INSERT",1,0));
 
         log.info( "Hello World! Pyp" );
         log.info(concurrencyControl.getDoc().toString());

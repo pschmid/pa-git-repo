@@ -14,7 +14,8 @@ package fiuba.pyp;
 public class ConcurrencyControl {
 
 	private static ConcurrencyControl INSTANCE = null;
-	 
+    private HistoryBuffer buffer;
+
     // Private constructor suppresses 
     private ConcurrencyControl(){
     	initialize();
@@ -34,6 +35,7 @@ public class ConcurrencyControl {
     
     private void initialize(){
     	this.algorithm = new GOTOAlgorithm();
+        this.buffer = new HistoryBuffer();
     }
     
     private Document doc;
@@ -54,7 +56,7 @@ public class ConcurrencyControl {
 	}
 
 	public synchronized void run(Operation operation){
-		Operation transOp = algorithm.run(operation);
+		Operation transOp = algorithm.run(operation,this.buffer);
 		execute(transOp);
 	}
 
