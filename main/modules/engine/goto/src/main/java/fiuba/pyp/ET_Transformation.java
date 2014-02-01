@@ -37,7 +37,12 @@ public class ET_Transformation extends Transformation {
 		return null;
 	}
 
-	public Operation ET_InsertInsert(Operation op1, Operation op2) {
+    @Override
+    public Operation transform(Operation op1, List<Operation> operationList) {
+        return null;
+    }
+
+    public Operation ET_InsertInsert(Operation op1, Operation op2) {
 		if (op1.getPosition() <= op2.getPosition())
 			return op1;
 		else{

@@ -39,6 +39,7 @@ public class GOTOAlgorithm extends AlgorithmControl{
             timestamp+=1;
 			System.out.print(opBuffer.toString());
             if(opBuffer.isIndependent(operation)){
+
                 for(int i=timestamp + 1;i<=operationBuffer.size();i++){
                     if(operationBuffer.get(i).isCausallyPreceding(operation)) {
                         //return the causally precedings with its position in the original historybuffer
@@ -63,7 +64,7 @@ public class GOTOAlgorithm extends AlgorithmControl{
                 return operation;
 
 		}
-        historyBuffer.add(operation);
+        //historyBuffer.add(operation);
 		return operation;
 	}
 
