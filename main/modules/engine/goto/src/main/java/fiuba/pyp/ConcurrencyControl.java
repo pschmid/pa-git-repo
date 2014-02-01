@@ -64,7 +64,7 @@ public class ConcurrencyControl {
         DocumentObject obj = transOp.getObj();
         int position = transOp.getPosition();
         int id = transOp.getId();
-
+        //fdokdsfkjodsfkjfds
 
         if(transOp.isInsert()){
             doc.addObject(obj, position, id);

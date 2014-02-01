@@ -3,6 +3,8 @@
  */
 package fiuba.pyp;
 
+import java.util.List;
+
 /**
  * @author army
  *
@@ -83,5 +85,11 @@ public class ET_Transformation extends Transformation {
 			//Never reaches this point
 			return null;
 		}
+	}
+
+	@Override
+	public Operation transform(Operation op1, List<Operation> operationList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
