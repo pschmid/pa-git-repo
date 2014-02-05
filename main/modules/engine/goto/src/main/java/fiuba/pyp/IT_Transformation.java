@@ -46,6 +46,9 @@ public class IT_Transformation extends Transformation {
 	public Operation IT_InsertInsert(Operation op1, Operation op2) {
 		if (op1.getPosition() < op2.getPosition())
 			return op1;
+        else if (op1.getPosition() == op2.getPosition() and op1.getId() < op2.getId()) {
+            return op1;
+        }
 		else{
 			Operation opAux = op1;
 			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
