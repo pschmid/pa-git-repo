@@ -13,9 +13,9 @@ public class App
 
     public static void main( String[] args )
     {
-//        PropertyConfigurator.configure(App.class.getClassLoader().getResource(
-//                "log4j.properties"));
-//        Logger log = Logger.getLogger(App.class);
+        PropertyConfigurator.configure(App.class.getClassLoader().getResource(
+                "log4j.properties"));
+        Logger log = Logger.getLogger(App.class);
         System.out.println("Hello World! Pyp");
         // Configure Log4J
         ConcurrencyControl concurrencyControl = ConcurrencyControl.getInstance();
@@ -38,10 +38,8 @@ public class App
         concurrencyControl.run(d);
         concurrencyControl.run(e);
 
-//        log.info( "Hello World! Pyp" );
-//        log.info(concurrencyControl.getDoc().toString());
-        System.out.println("\n");
-        System.out.println(concurrencyControl.getDoc().toString());
+        log.info( "Hello World! Pyp" );
+        log.info(concurrencyControl.getDoc().toString());
         
     }
 }
