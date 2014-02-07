@@ -5,6 +5,8 @@ package fiuba.pyp;
 
 import fiuba.pyp.Document;
 
+import java.util.Iterator;
+
 /**
  * @author pyp
  *
@@ -16,6 +18,7 @@ public class Operation {
 	private String type;
     private int userId;
     private int timeStamp;
+    private HistoryBuffer otherSiteOperations;
 
     public Operation(DocumentObject object, int pos, String type,int userId, int timeStamp) {
         this.obj = object;
@@ -23,6 +26,14 @@ public class Operation {
         this.type = type;
         this.userId = userId;
         this.timeStamp = timeStamp;
+        this.otherSiteOperations = new HistoryBuffer();
+    }
+
+    public Iterator<Operation> getOtherSitesOperations(){
+        return otherSiteOperations.getBuffer().iterator();
+    }
+    public void setOtherSitesOperations(Operation op){
+        otherSiteOperations.add(op);
     }
 
 	public boolean isInsert(){
@@ -89,13 +100,58 @@ public class Operation {
 		this.type = type;
 	}
 
-    public boolean isIndependent(Operation operation) {
 
+    public int getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
+    /*
+    *two operations are dependent if
+     */
+    public boolean isIndependent(Operation operation) {
+        if(operation.getId() == this.userId  )
+            return false;
+        else
+        if(executionHappendsBeforeGeneration(operation)){
+            return false;
+        }else
+            return true;
+
+    }
+
+    /*
+    *if the arrived operation has this operation in its context then they are dependent
+     */
+    private boolean executionHappendsBeforeGeneration(Operation operation1) {
+        Iterator<Operation> it = operation1.getOtherSitesOperations();
+        Operation otherSiteOp;
+        while(it.hasNext()){
+            otherSiteOp = it.next();
+            if(this.userId == otherSiteOp.userId  && this.timeStamp == otherSiteOp.getTimeStamp()){
+                return true;
+            }
+        }
         return false;
     }
 
     public boolean isCausallyPreceding(Operation operation) {
-        return false;
+        if(isIndependent(operation)) {
+            return false;
+        }
+        return true;
 
     }
 }

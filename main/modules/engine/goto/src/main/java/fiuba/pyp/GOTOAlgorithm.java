@@ -4,10 +4,7 @@
 package fiuba.pyp;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author pyp
@@ -42,14 +39,14 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
                 for(int i=timestamp + 1;i<=operationBuffer.size();i++){
                     if(operationBuffer.get(i).isCausallyPreceding(operation)) {
-                        //return the causally precedings with its position in the original historybuffer
-                        Map<Integer,Operation> causallyPrecedingOperation = getCausallyPrecedingOperations(operationBuffer, i);
+                        //returns the causally precedings with its position in the original historybuffer
+                        Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i,operation);
                         int j = 0;
-                        for(Integer key:causallyPrecedingOperation.keySet()) {
+                        for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
-                            lTranspose(operationBuffer, timestamp + j - 1,key );
+                            lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 1, key));
                         }
-                        int initialIdx = timestamp + causallyPrecedingOperation.size();
+                        int initialIdx = timestamp + causallyPrecedingOperations.size();
                         int finalIdx = operationBuffer.size();
                         ArrayList<Operation> middleOperations = getMiddleOperations(operationBuffer, initialIdx,finalIdx);
                         return it.transform(operation, middleOperations);
@@ -68,29 +65,66 @@ public class GOTOAlgorithm extends AlgorithmControl{
 		return operation;
 	}
 
+    private ArrayList<Operation> getTransposeBuffer(ArrayList<Operation> operationBuffer, int i, Integer key) {
+
+        return getMiddleOperations(operationBuffer, i, key);
+
+    }
+
     private ArrayList<Operation> getMiddleOperations(ArrayList<Operation> operationBuffer, int initialIdx, int finalIdx) {
-        return null;
+        ArrayList<Operation> middleOperations = new ArrayList<Operation>();
+        for(int i= initialIdx ; i<= finalIdx ; i++ ) {
+            middleOperations.add(operationBuffer.get(i));
+        }
+        return middleOperations;
     }
 
     private ArrayList<Operation> getLTransposeOperations(int i, int j) {
         return null;
     }
 
-    private Map<Integer,Operation> getCausallyPrecedingOperations(ArrayList<Operation> operationBuffer, int i) {
-        return null;
+    /*
+    *return the causally precedings with its position in the original historybuffer
+     */
+    private Map<Integer,Operation> getCausallyPrecedingOperations(ArrayList<Operation> operationBuffer, int i, Operation operation) {
+
+        Map<Integer, Operation> causallyPrecedingOperations = new HashMap<Integer, Operation>();
+        List<Operation> lastOperations = new ArrayList<Operation>();
+        lastOperations.addAll(i, operationBuffer);
+        int j = i;
+        for (Operation op : lastOperations) {
+            if (op.isCausallyPreceding(operation))
+                causallyPrecedingOperations.put(j, op);
+            j++;
+        }
+        return causallyPrecedingOperations;
     }
 
     private ArrayList<Operation> getTailOperations(ArrayList<Operation> operationBuffer, int i) {
-        return new ArrayList<Operation>();
+        ArrayList<Operation> tailOperations = new ArrayList<Operation>();
+        tailOperations.addAll(i, operationBuffer);
+        return tailOperations;
     }
 
 
     public List<Operation> lTranspose(Operation op1, Operation op2) {
-        return null;
+        List<Operation> tranformedOperations = new ArrayList<Operation>();
+        Operation op2Prime = et.transform(op2, op1);
+        Operation op1Prime = it.transform(op1, op2Prime);
+        tranformedOperations.add(op2Prime);
+        tranformedOperations.add(op1Prime);
+        return tranformedOperations;
     }
 
 
-    public void lTranspose(List<Operation> operations, int initialIdx, int finalIdx) {
+    public void lTranspose(List<Operation> operations) {
+
+        List<Operation> twoOperations;
+        for (int i = operations.size(); i > 1; i--) {
+            twoOperations = lTranspose(operations.get(i - 1), operations.get(i));
+            operations.set(i - 1, twoOperations.get(0));
+            operations.set(i - 1, twoOperations.get(1));
+        }
 
     }
 

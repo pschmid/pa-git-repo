@@ -20,7 +20,21 @@ public class App
         // Configure Log4J
         ConcurrencyControl concurrencyControl = ConcurrencyControl.getInstance();
         concurrencyControl.setDoc(new DocumentText());
-        concurrencyControl.run(new Operation(new DocumentCharacter("a"),0,"INSERT",1,0));
+
+        Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
+        Operation b = new Operation(new DocumentCharacter("b"), 0, "INSERT", 2, 2);
+        b.setOtherSitesOperations(a);
+        Operation c = new Operation(new DocumentCharacter("c"), 0, "INSERT", 3, 1);
+
+        Operation d = new Operation(new DocumentCharacter("d"), 0, "INSERT", 1, 3);
+        Operation e = new Operation(new DocumentCharacter("e"), 0, "INSERT", 1, 3);
+
+        Operation f = new Operation(new DocumentCharacter("f"), 0, "INSERT", 1, 3);
+
+
+        concurrencyControl.run(a);
+        concurrencyControl.run(b);
+        //concurrencyControl.run(c);
 
         log.info( "Hello World! Pyp" );
         log.info(concurrencyControl.getDoc().toString());

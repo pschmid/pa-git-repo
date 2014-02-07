@@ -92,9 +92,4 @@ public class ET_Transformation extends Transformation {
 		}
 	}
 
-	@Override
-	public Operation transform(Operation op1, List<Operation> operationList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

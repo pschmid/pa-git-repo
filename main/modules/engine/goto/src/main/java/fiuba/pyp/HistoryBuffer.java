@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class HistoryBuffer {
 	
 	private ArrayList<Operation> buffer;
-	
+
 	/**
 	 * Creates the History Buffer
 	 */
@@ -50,5 +50,8 @@ public class HistoryBuffer {
 	public synchronized void remove(Operation op){
 		buffer.remove(op);
 	}
-	
+
+    public int getBufferSize() {
+        return buffer.size();
+    }
 }
