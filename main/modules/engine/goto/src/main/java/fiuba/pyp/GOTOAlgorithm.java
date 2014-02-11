@@ -4,6 +4,8 @@
 package fiuba.pyp;
 
 
+import org.apache.log4j.Logger;
+
 import java.util.*;
 
 /**
@@ -31,36 +33,49 @@ public class GOTOAlgorithm extends AlgorithmControl{
 	public Operation run(Operation operation, HistoryBuffer historyBuffer) {
 
         int timestamp = 0;
+        Logger log = Logger.getLogger(App.class);
         ArrayList<Operation> operationBuffer = historyBuffer.getBuffer();
 		for (Operation opBuffer : operationBuffer){
             timestamp+=1;
-			System.out.print(opBuffer.toString());
+
             if(opBuffer.isIndependent(operation)){
 
                 for(int i=timestamp + 1;i<=operationBuffer.size();i++){
-                    if(operationBuffer.get(i).isCausallyPreceding(operation)) {
+                    if(operationBuffer.get(i-1).isCausallyPreceding(operation)) {
+                        log.info(operationBuffer.get(i-1).getObj().getObj() + "from "+ operationBuffer.get(i-1).getId() + " is causally preceding "+
+                                operation.getObj().getObj() + "from "+ operation.getId());
                         //returns the causally precedings with its position in the original historybuffer
-                        Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i,operation);
+                        Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i-1,operation);
                         int j = 0;
                         for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
-                            lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 1, key));
+                            lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 2, key));
                         }
-                        int initialIdx = timestamp + causallyPrecedingOperations.size();
-                        int finalIdx = operationBuffer.size();
+                        int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
+                        int finalIdx = operationBuffer.size()-1;
                         ArrayList<Operation> middleOperations = getMiddleOperations(operationBuffer, initialIdx,finalIdx);
+
                         return it.transform(operation, middleOperations);
 
                     }else {
-                        ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, i);
+                        log.info(operationBuffer.get(i-1).getObj().getObj() + "from "+ operationBuffer.get(i-1).getId() + " is not causally preceding "+
+                                operation.getObj().getObj() + "from "+ opBuffer.getId());
+                        ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, i-1);
                         return it.transform(operation, tailOperations);
                     }
                 }
+                log.info("independent operation. Adding " + operation.getObj().getObj() );
+
             }
-            else
+            else{
+                log.info(opBuffer.getObj().getObj() + "from " + opBuffer.getId() + " is dependent " +
+                        operation.getObj().getObj() + "from " + opBuffer.getId());
                 return operation;
+            }
 
 		}
+        if(operationBuffer.isEmpty())
+            log.info("not operation in history buffer. Adding " + operation.getObj().getObj() );
         //historyBuffer.add(operation);
 		return operation;
 	}
@@ -90,8 +105,11 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
         Map<Integer, Operation> causallyPrecedingOperations = new HashMap<Integer, Operation>();
         List<Operation> lastOperations = new ArrayList<Operation>();
-        lastOperations.addAll(i, operationBuffer);
+
         int j = i;
+        for(int z = i ; z<operationBuffer.size(); z++) {
+            lastOperations.add(operationBuffer.get(z));
+        }
         for (Operation op : lastOperations) {
             if (op.isCausallyPreceding(operation))
                 causallyPrecedingOperations.put(j, op);
@@ -120,10 +138,10 @@ public class GOTOAlgorithm extends AlgorithmControl{
     public void lTranspose(List<Operation> operations) {
 
         List<Operation> twoOperations;
-        for (int i = operations.size(); i > 1; i--) {
+        for (int i = operations.size() -1; i > 0; i--) {
             twoOperations = lTranspose(operations.get(i - 1), operations.get(i));
             operations.set(i - 1, twoOperations.get(0));
-            operations.set(i - 1, twoOperations.get(1));
+            operations.set(i, twoOperations.get(1));
         }
 
     }

@@ -38,10 +38,10 @@ public class DocumentText extends Document{
 	 */
 	@Override
 	public void removeObject(DocumentObject obj, int position, int id) {
-		// TODO Auto-generated method stub
+		// TODO check if we need to check equalities between obj and obj in doc
 		String end = doc.substring(obj.getLength() + position);
 		String result = doc.substring(0, position);
-		result.concat(end);
+        result = result + end;
 		this.doc = result;
 	}
 
