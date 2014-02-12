@@ -3,6 +3,8 @@
  */
 package fiuba.pyp;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * Controls the Concurrency<br>
@@ -76,6 +78,15 @@ public class ConcurrencyControl {
             doc.removeObject(obj, position, id);
         }
 
+    }
+
+    public void printHistoryBuffer(){
+        Logger log = Logger.getLogger(App.class);
+        for (Operation op : this.buffer.getBuffer()){
+            log.info(op.getType()+ " " + op.getObj().getObj()+ " " + op.getPosition() + " time: "
+            + op.getTimeStamp());
+
+        }
     }
 	
 }

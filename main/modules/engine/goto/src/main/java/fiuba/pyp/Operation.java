@@ -4,6 +4,7 @@
 package fiuba.pyp;
 
 import fiuba.pyp.Document;
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 
@@ -117,6 +118,10 @@ public class Operation {
         this.userId = userId;
     }
 
+    public void print(String label){
+        Logger log = Logger.getLogger(App.class);
+        log.info(label + this.getType() + " " + this.getObj().getObj() + " " + this.getPosition());
+    }
 
     /*
     *two operations are dependent if

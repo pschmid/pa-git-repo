@@ -45,13 +45,14 @@ public class ET_Transformation extends Transformation {
     }
 
     public Operation ET_InsertInsert(Operation op1, Operation op2) {
-//        Logger log = Logger.getLogger(App.class);
-//        log.info(op1.getId() + "-" + op1.getPosition()+ "-" + op1.getTimeStamp() );
-//        log.info(op2.getId() + "-" + op2.getPosition()+  "-" +op2.getTimeStamp() );
-        if (op1.getPosition() <= op2.getPosition())
-			return op1;
-		else{
-			Operation opAux = op1;
+        Logger log = Logger.getLogger(App.class);
+        if (op1.getPosition() < op2.getPosition())
+            return op1;
+        else if (op1.getPosition() == op2.getPosition() && op1.getId() < op2.getId()) {
+            return op1;
+        }
+        else{
+            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
 			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
 			return opAux;
 		}
@@ -61,33 +62,29 @@ public class ET_Transformation extends Transformation {
 		if (op1.getPosition() <= op2.getPosition())
 			return op1;
 		else{
-			Operation opAux = op1;
+            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
 			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
 			return opAux;
 		}
+
 	}
 	
 	public Operation ET_DeleteInsert(Operation op1, Operation op2) {
-		if (op1.getPosition() + op1.getObj().getLength() <= op2.getPosition())
-			return op1;
-		else if (op1.getPosition() >= op2.getPosition() + op2.getObj().getLength()){
-			Operation opAux = op1;
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
-		}
-		else{
-			//Delete & Insert in the same Position -> Do Nothing
-			//Check
-			return null;
-		}
-		
-	}
+        if (op1.getPosition() < op2.getPosition())
+            return op1;
+        else{
+            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+            opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
+            return opAux;
+        }
+
+    }
 	
 	public Operation ET_DeleteDelete(Operation op1, Operation op2) {
 		if (op1.getPosition() + op1.getObj().getLength() <= op2.getPosition())
 			return op1;
 		else if (op1.getPosition() >= op2.getPosition()){
-			Operation opAux = op1;
+            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
 			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
 			return opAux;
 		}

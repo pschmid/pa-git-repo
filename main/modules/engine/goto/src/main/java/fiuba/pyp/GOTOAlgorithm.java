@@ -40,20 +40,24 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
             if(opBuffer.isIndependent(operation)){
 
-                for(int i=timestamp + 1;i<=operationBuffer.size();i++){
+                for(int i=timestamp +1;i<=operationBuffer.size();i++){
                     if(operationBuffer.get(i-1).isCausallyPreceding(operation)) {
                         log.info(operationBuffer.get(i-1).getObj().getObj() + "from "+ operationBuffer.get(i-1).getId() + " is causally preceding "+
                                 operation.getObj().getObj() + "from "+ operation.getId());
                         //returns the causally precedings with its position in the original historybuffer
                         Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i-1,operation);
                         int j = 0;
+                        ArrayList<Operation> opBufferTransposed = operationBuffer;
                         for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
-                            lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 2, key));
+                            opBufferTransposed = lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 2, key));
                         }
                         int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
-                        int finalIdx = operationBuffer.size()-1;
-                        ArrayList<Operation> middleOperations = getMiddleOperations(operationBuffer, initialIdx,finalIdx);
+                        int finalIdx = opBufferTransposed.size()-1;
+                        ArrayList<Operation> middleOperations = getMiddleOperations(opBufferTransposed, initialIdx,finalIdx);
+
+                        //Aca esta el tema se transpone todo bien pero falta que haga el LIT
+                        //contra las demas operaciones por que middleOperations queda en blanco
 
                         return it.transform(operation, middleOperations);
 
@@ -65,6 +69,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
                     }
                 }
                 log.info("independent operation. Adding " + operation.getObj().getObj() );
+                ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, timestamp-1);
+                return it.transform(operation, tailOperations);
 
             }
             else{
@@ -88,6 +94,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     private ArrayList<Operation> getMiddleOperations(ArrayList<Operation> operationBuffer, int initialIdx, int finalIdx) {
         ArrayList<Operation> middleOperations = new ArrayList<Operation>();
+        Logger log = Logger.getLogger(App.class);
+        log.info("Middle " + initialIdx + " " + finalIdx + "Size buff: " + operationBuffer.size());
         for(int i= initialIdx ; i<= finalIdx ; i++ ) {
             middleOperations.add(operationBuffer.get(i));
         }
@@ -127,15 +135,19 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     public List<Operation> lTranspose(Operation op1, Operation op2) {
         List<Operation> tranformedOperations = new ArrayList<Operation>();
+        op1.print("before transpose1 ");
+        op2.print("before transpose2 ");
         Operation op2Prime = et.transform(op2, op1);
         Operation op1Prime = it.transform(op1, op2Prime);
+        op1Prime.print("after transpose1 ");
+        op2Prime.print("after transpose2 ");
         tranformedOperations.add(op2Prime);
         tranformedOperations.add(op1Prime);
         return tranformedOperations;
     }
 
 
-    public void lTranspose(List<Operation> operations) {
+    public ArrayList<Operation> lTranspose(List<Operation> operations) {
 
         List<Operation> twoOperations;
         for (int i = operations.size() -1; i > 0; i--) {
@@ -143,6 +155,9 @@ public class GOTOAlgorithm extends AlgorithmControl{
             operations.set(i - 1, twoOperations.get(0));
             operations.set(i, twoOperations.get(1));
         }
+        ArrayList<Operation> result = new ArrayList<Operation>();
+        result.addAll(0, operations);
+        return result;
 
     }
 
