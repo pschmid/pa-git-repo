@@ -48,6 +48,9 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i-1,operation);
                         int j = 0;
                         ArrayList<Operation> opBufferTransposed = operationBuffer;
+
+                        //Por este lado hay que revisar la transposicion y el LIT final
+
                         for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
                             opBufferTransposed = lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 2, key));
@@ -55,9 +58,6 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
                         int finalIdx = opBufferTransposed.size()-1;
                         ArrayList<Operation> middleOperations = getMiddleOperations(opBufferTransposed, initialIdx,finalIdx);
-
-                        //Aca esta el tema se transpone todo bien pero falta que haga el LIT
-                        //contra las demas operaciones por que middleOperations queda en blanco
 
                         return it.transform(operation, middleOperations);
 
