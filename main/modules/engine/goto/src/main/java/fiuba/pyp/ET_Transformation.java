@@ -3,6 +3,8 @@
  */
 package fiuba.pyp;
 
+import org.apache.log4j.Logger;
+
 import java.util.List;
 
 /**
@@ -43,7 +45,10 @@ public class ET_Transformation extends Transformation {
     }
 
     public Operation ET_InsertInsert(Operation op1, Operation op2) {
-		if (op1.getPosition() <= op2.getPosition())
+//        Logger log = Logger.getLogger(App.class);
+//        log.info(op1.getId() + "-" + op1.getPosition()+ "-" + op1.getTimeStamp() );
+//        log.info(op2.getId() + "-" + op2.getPosition()+  "-" +op2.getTimeStamp() );
+        if (op1.getPosition() <= op2.getPosition())
 			return op1;
 		else{
 			Operation opAux = op1;
