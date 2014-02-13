@@ -58,7 +58,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
                         int finalIdx = opBufferTransposed.size()-1;
                         ArrayList<Operation> middleOperations = getMiddleOperations(opBufferTransposed, initialIdx,finalIdx);
-
+                        for (Operation op : opBufferTransposed)
+                            op.print("lala ");
                         return it.transform(operation, middleOperations);
 
                     }else {
