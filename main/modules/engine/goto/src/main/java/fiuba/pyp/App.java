@@ -33,8 +33,7 @@ public class App
         concurrencyControl.run(c);
         concurrencyControl.run(d);
         concurrencyControl.run(e);
-//        concurrencyControl.printHistoryBuffer();
-//        concurrencyControl.run(f);
+        concurrencyControl.run(f);
 
         log.info(concurrencyControl.getDoc().toString());
         concurrencyControl.printHistoryBuffer();

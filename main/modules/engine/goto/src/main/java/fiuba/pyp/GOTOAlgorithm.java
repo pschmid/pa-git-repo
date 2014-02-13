@@ -47,13 +47,13 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         //returns the causally precedings with its position in the original historybuffer
                         Map<Integer,Operation> causallyPrecedingOperations = getCausallyPrecedingOperations(operationBuffer, i-1,operation);
                         int j = 0;
-                        ArrayList<Operation> opBufferTransposed = operationBuffer;
 
-                        //Por este lado hay que revisar la transposicion y el LIT final
+                        ArrayList<Operation> opBufferTransposed = new ArrayList<Operation>();
+                        opBufferTransposed.addAll(operationBuffer);
 
                         for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
-                            opBufferTransposed = lTranspose(getTransposeBuffer(operationBuffer, timestamp + j - 2, key));
+                            lTranspose(getTransposeBuffer(opBufferTransposed, timestamp + j - 2, key), opBufferTransposed, timestamp + j - 2, key);
                         }
                         int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
                         int finalIdx = opBufferTransposed.size()-1;
@@ -147,17 +147,17 @@ public class GOTOAlgorithm extends AlgorithmControl{
     }
 
 
-    public ArrayList<Operation> lTranspose(List<Operation> operations) {
+    public void lTranspose(List<Operation> operations, List<Operation> operationsTrans, int posi, int posj) {
 
         List<Operation> twoOperations;
         for (int i = operations.size() -1; i > 0; i--) {
             twoOperations = lTranspose(operations.get(i - 1), operations.get(i));
             operations.set(i - 1, twoOperations.get(0));
             operations.set(i, twoOperations.get(1));
+            operationsTrans.set(posi, twoOperations.get(0));
+            operationsTrans.set(posj, twoOperations.get(1));
         }
-        ArrayList<Operation> result = new ArrayList<Operation>();
-        result.addAll(0, operations);
-        return result;
+
 
     }
 
