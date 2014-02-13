@@ -24,7 +24,7 @@ public class App
         Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
         Operation b = new Operation(new DocumentCharacter("b"), 0, "INSERT", 2, 1);
         Operation c = new Operation(new DocumentCharacter("c"), 0, "INSERT", 2, 2);
-        Operation d = new Operation(new DocumentCharacter("d"), 2, "INSERT", 1, 2);
+        Operation d = new Operation(new DocumentCharacter("d"), 2, "INSERT", 1, 4);
         Operation e = new Operation(new DocumentCharacter("c"), 0, "DELETE", 2, 3);
         Operation f = new Operation(new DocumentCharacter("b"), 0, "DELETE", 2, 4);
 
