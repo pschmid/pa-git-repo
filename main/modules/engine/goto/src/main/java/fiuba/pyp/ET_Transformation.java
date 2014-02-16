@@ -24,17 +24,18 @@ public class ET_Transformation extends Transformation {
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
-		if (op1.isInsert() && op2.isInsert()){
-			return ET_InsertInsert(op1, op2);
+        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+		if (opAux.isInsert() && op2.isInsert()){
+			return ET_InsertInsert(opAux, op2);
 		}
-		else if (op1.isInsert() && op2.isDelete()){
-			return ET_InsertDelete(op1, op2);
+		else if (opAux.isInsert() && op2.isDelete()){
+			return ET_InsertDelete(opAux, op2);
 		}
-		else if (op1.isDelete() && op2.isInsert()){
-			return ET_DeleteInsert(op1, op2);
+		else if (opAux.isDelete() && op2.isInsert()){
+			return ET_DeleteInsert(opAux, op2);
 		}
-		else if (op1.isDelete() && op2.isDelete()){
-			return ET_DeleteDelete(op1, op2);
+		else if (opAux.isDelete() && op2.isDelete()){
+			return ET_DeleteDelete(opAux, op2);
 		}
 		return null;
 	}
@@ -52,9 +53,8 @@ public class ET_Transformation extends Transformation {
             return op1;
         }
         else{
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
+            op1.setPosition(op1.getPosition() - op2.getObj().getLength());
+			return op1;
 		}
 	}
 	
@@ -62,9 +62,9 @@ public class ET_Transformation extends Transformation {
 		if (op1.getPosition() <= op2.getPosition())
 			return op1;
 		else{
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
-			return opAux;
+
+			op1.setPosition(op1.getPosition() + op2.getObj().getLength());
+			return op1;
 		}
 
 	}
@@ -73,9 +73,8 @@ public class ET_Transformation extends Transformation {
         if (op1.getPosition() < op2.getPosition())
             return op1;
         else{
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-            opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-            return opAux;
+            op1.setPosition(op1.getPosition() - op2.getObj().getLength());
+            return op1;
         }
 
     }
@@ -84,13 +83,13 @@ public class ET_Transformation extends Transformation {
 		if (op1.getPosition() + op1.getObj().getLength() <= op2.getPosition())
 			return op1;
 		else if (op1.getPosition() >= op2.getPosition()){
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
-			return opAux;
+            op1.setPosition(op1.getPosition() + op2.getObj().getLength());
+			return op1;
 		}
 		else{
 			//Never reaches this point
-			return null;
+            op1.setObj(null);
+			return op1;
 		}
 	}
 

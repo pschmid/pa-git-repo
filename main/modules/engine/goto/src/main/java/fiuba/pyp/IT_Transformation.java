@@ -24,17 +24,18 @@ public class IT_Transformation extends Transformation {
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
-		if (op1.isInsert() && op2.isInsert()){
-			return IT_InsertInsert(op1, op2);
+        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+		if (opAux.isInsert() && op2.isInsert()){
+			return IT_InsertInsert(opAux, op2);
 		}
-		else if (op1.isInsert() && op2.isDelete()){
-			return IT_InsertDelete(op1, op2);
+		else if (opAux.isInsert() && op2.isDelete()){
+			return IT_InsertDelete(opAux, op2);
 		}
-		else if (op1.isDelete() && op2.isInsert()){
-			return IT_DeleteInsert(op1, op2);
+		else if (opAux.isDelete() && op2.isInsert()){
+			return IT_DeleteInsert(opAux, op2);
 		}
-		else if (op1.isDelete() && op2.isDelete()){
-			return IT_DeleteDelete(op1, op2);
+		else if (opAux.isDelete() && op2.isDelete()){
+			return IT_DeleteDelete(opAux, op2);
 		}
 		return null;
 	}
@@ -57,10 +58,8 @@ public class IT_Transformation extends Transformation {
             return op1;
         }
 		else{
-			Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
-			opAux.print("IT ");
-            return opAux;
+			op1.setPosition(op1.getPosition() + op2.getObj().getLength());
+			return op1;
 		}
 	}
 	
@@ -68,20 +67,15 @@ public class IT_Transformation extends Transformation {
 		if (op1.getPosition() <= op2.getPosition())
 			return op1;
 		else{
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
+            op1.setPosition(op1.getPosition() - op2.getObj().getLength());
+			return op1;
 		}
 		/* String-wise
 		else if (op1.getPosition() > op2.getPosition() + op2.getObj().getLength()){
-			Operation opAux = op1;
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
+			return op1;
 		}
 		else{
-			Operation opAux = op1;
-			opAux.setPosition(op2.getPosition());
-			return opAux;
+			return op1;
 		}*/
 	}
 	
@@ -89,18 +83,15 @@ public class IT_Transformation extends Transformation {
 		if (op1.getPosition() < op2.getPosition())
 			return op1;
 		else{
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
-			return opAux;
+            op1.setPosition(op1.getPosition() + op2.getObj().getLength());
+			return op1;
 		}	
 		/*	String-Wise
 		 * 
 		 * if (op2.getPosition() >= op1.getPosition() + op1.getObj().getLength())
 			return op1;
 		else if (op1.getPosition() >= op2.getPosition()){
-			Operation opAux = op1;
-			opAux.setPosition(op1.getPosition() + op2.getObj().getLength());
-			return opAux;
+			return op1;
 		}
 		else{
 			return op1;
@@ -111,9 +102,7 @@ public class IT_Transformation extends Transformation {
 		if (op1.getPosition() < op2.getPosition())
 			return op1;
 		else if (op1.getPosition() > op2.getPosition()){
-            Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
+            return op1;
 		}
 		else{
 			return null;
@@ -124,9 +113,7 @@ public class IT_Transformation extends Transformation {
 			return op1;
 		else if (op1.getPosition() >= op2.getPosition() + op2.getObj().getLength()){
 			//Delete (L(op1, P(op1) - L(op1))
-			Operation opAux = op1;
-			opAux.setPosition(op1.getPosition() - op2.getObj().getLength());
-			return opAux;
+			return op1;
 		}
 		else{
 			if (op2.getPosition() <= op1.getPosition() && (op1.getPosition() + op1.getObj().getLength() <= op2.getPosition() + op2.getObj().getLength()))
@@ -134,9 +121,7 @@ public class IT_Transformation extends Transformation {
 				return null;
 			else if (op2.getPosition() <= op1.getPosition() && (op1.getPosition() + op1.getObj().getLength() > op2.getPosition() + op2.getObj().getLength())){
 				//Delete (P(op1) + L(op1) - (P(op2) + L(op2)), P(op2))
-				Operation opAux = op1;
-				opAux.setPosition(op2.getPosition());
-				return opAux;
+				return op1;
 			}
 			else if (op2.getPosition() > op1.getPosition() && (op1.getPosition() + op1.getObj().getLength() <= op2.getPosition() + op2.getObj().getLength())){
 				//Delete (P(op2) - P(op1), P(op1))

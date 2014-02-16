@@ -53,13 +53,11 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
                         for(Integer key:causallyPrecedingOperations.keySet()) {
                             j++;
-                            lTranspose(getTransposeBuffer(opBufferTransposed, timestamp + j - 2, key), opBufferTransposed, timestamp + j - 2, key);
+                            lTranspose(getTransposeBuffer(opBufferTransposed, timestamp + j - 2, key), opBufferTransposed, key);
                         }
                         int initialIdx = timestamp + causallyPrecedingOperations.size() -1;
                         int finalIdx = opBufferTransposed.size()-1;
                         ArrayList<Operation> middleOperations = getMiddleOperations(opBufferTransposed, initialIdx,finalIdx);
-                        for (Operation op : opBufferTransposed)
-                            op.print("lala ");
                         return it.transform(operation, middleOperations);
 
                     }else {
@@ -95,8 +93,6 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     private ArrayList<Operation> getMiddleOperations(ArrayList<Operation> operationBuffer, int initialIdx, int finalIdx) {
         ArrayList<Operation> middleOperations = new ArrayList<Operation>();
-        Logger log = Logger.getLogger(App.class);
-        log.info("Middle " + initialIdx + " " + finalIdx + "Size buff: " + operationBuffer.size());
         for(int i= initialIdx ; i<= finalIdx ; i++ ) {
             middleOperations.add(operationBuffer.get(i));
         }
@@ -148,15 +144,16 @@ public class GOTOAlgorithm extends AlgorithmControl{
     }
 
 
-    public void lTranspose(List<Operation> operations, List<Operation> operationsTrans, int posi, int posj) {
+    public void lTranspose(List<Operation> operations, List<Operation> operationsTrans, int posj) {
 
         List<Operation> twoOperations;
         for (int i = operations.size() -1; i > 0; i--) {
             twoOperations = lTranspose(operations.get(i - 1), operations.get(i));
             operations.set(i - 1, twoOperations.get(0));
             operations.set(i, twoOperations.get(1));
-            operationsTrans.set(posi, twoOperations.get(0));
+            operationsTrans.set(posj-1, twoOperations.get(0));
             operationsTrans.set(posj, twoOperations.get(1));
+            posj--;
         }
 
 
