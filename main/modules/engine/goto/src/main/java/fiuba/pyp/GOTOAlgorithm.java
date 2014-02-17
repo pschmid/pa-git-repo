@@ -60,12 +60,12 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         ArrayList<Operation> middleOperations = getMiddleOperations(opBufferTransposed, initialIdx,finalIdx);
                         return it.transform(operation, middleOperations);
 
-                    }else {
+                    }/*else {
                         log.info(operationBuffer.get(i-1).getObj().getObj() + "from "+ operationBuffer.get(i-1).getId() + " is not causally preceding "+
                                 operation.getObj().getObj() + "from "+ opBuffer.getId());
                         ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, i-1);
                         return it.transform(operation, tailOperations);
-                    }
+                    }*/
                 }
                 log.info("independent operation. Adding " + operation.getObj().getObj() );
                 ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, timestamp-1);
@@ -125,7 +125,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     private ArrayList<Operation> getTailOperations(ArrayList<Operation> operationBuffer, int i) {
         ArrayList<Operation> tailOperations = new ArrayList<Operation>();
-        tailOperations.addAll(i, operationBuffer);
+        if (i <= operationBuffer.size()){
+            tailOperations.addAll(i, operationBuffer);}
         return tailOperations;
     }
 

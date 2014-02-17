@@ -58,7 +58,6 @@ public class HelloWorldTest {
         Operation e = new Operation(new DocumentCharacter("e"), 1, "INSERT", 1, 5);
         Operation f = new Operation(new DocumentCharacter("f"), 2, "INSERT", 1, 6);
 
-
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
         ops.add(b);
@@ -80,7 +79,6 @@ public class HelloWorldTest {
         Operation d = new Operation(new DocumentCharacter("d"), 2, "INSERT", 1, 4);
         Operation e = new Operation(new DocumentCharacter("e"), 1, "INSERT", 1, 5);
         Operation f = new Operation(new DocumentCharacter("f"), 0, "INSERT", 1, 6);
-
 
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
@@ -104,7 +102,6 @@ public class HelloWorldTest {
         Operation e = new Operation(new DocumentCharacter("e"), 3, "INSERT", 1, 5);
         Operation f = new Operation(new DocumentCharacter("f"), 3, "INSERT", 1, 6);
 
-
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
         ops.add(b);
@@ -127,7 +124,6 @@ public class HelloWorldTest {
         Operation e = new Operation(new DocumentCharacter("b"), 1, "DELETE", 1, 5);
         Operation f = new Operation(new DocumentCharacter("a"), 0, "DELETE", 1, 6);
 
-
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
         ops.add(b);
@@ -139,7 +135,9 @@ public class HelloWorldTest {
 
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "");
     }
-    public void basicOneSiteremove1(){
+
+    @Test
+    public void basicOneSiteRemove1(){
         ConcurrencyControl concurrencyControl = createDocument();
 
         Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
@@ -149,7 +147,6 @@ public class HelloWorldTest {
         Operation e = new Operation(new DocumentCharacter("c"), 1, "DELETE", 1, 5);
         Operation f = new Operation(new DocumentCharacter("a"), 0, "DELETE", 1, 6);
 
-
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
         ops.add(b);
@@ -161,11 +158,9 @@ public class HelloWorldTest {
 
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "");
     }
-
-    public void basicOneSiteremove2(){
+    @Test
+    public void basicOneSiteRemove2(){
         ConcurrencyControl concurrencyControl = createDocument();
-
-
 
         Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
         Operation b = new Operation(new DocumentCharacter("b"), 1, "INSERT", 1, 2);
@@ -174,7 +169,6 @@ public class HelloWorldTest {
         Operation e = new Operation(new DocumentCharacter("b"), 0, "DELETE", 1, 5);
         Operation f = new Operation(new DocumentCharacter("c"), 0, "DELETE", 1, 6);
 
-
         List<Operation> ops = new ArrayList<Operation>();
         ops.add(a);
         ops.add(b);
@@ -186,4 +180,29 @@ public class HelloWorldTest {
 
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "");
     }
+
+    /*
+    @Test
+    public void basicOneSiteReceiveOperation() {
+        ConcurrencyControl concurrencyControl = createDocument();
+
+        Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
+        Operation b = new Operation(new DocumentCharacter("b"), 0, "INSERT", 2, 1);
+        Operation c = new Operation(new DocumentCharacter("c"), 0, "INSERT", 2, 2);
+        Operation d = new Operation(new DocumentCharacter("d"), 2, "INSERT", 1, 2);
+        Operation e = new Operation(new DocumentCharacter("g"), 1, "INSERT", 1, 3);
+        Operation f = new Operation(new DocumentCharacter("c"), 0, "DELETE", 2, 3);
+        Operation g = new Operation(new DocumentCharacter("b"), 0, "DELETE", 2, 4);
+
+        List<Operation> ops = new ArrayList<Operation>();
+        ops.add(a);
+        ops.add(b);
+        ops.add(c);
+        ops.add(d);
+        ops.add(e);
+        ops.add(f);
+        ops.add(g);
+        runOperations(concurrencyControl,ops);
+        Assert.assertEquals(concurrencyControl.getDoc().toString(), "agd");
+    }*/
 }

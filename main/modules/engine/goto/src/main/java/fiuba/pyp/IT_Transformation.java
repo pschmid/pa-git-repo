@@ -25,6 +25,8 @@ public class IT_Transformation extends Transformation {
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
         Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+        if (!op2.isIdentity())
+            opAux.setIdentity(op1.getIdentity());
 		if (opAux.isInsert() && op2.isInsert()){
 			return IT_InsertInsert(opAux, op2);
 		}
@@ -102,10 +104,12 @@ public class IT_Transformation extends Transformation {
 		if (op1.getPosition() < op2.getPosition())
 			return op1;
 		else if (op1.getPosition() > op2.getPosition()){
+            op1.setPosition(op1.getPosition() - op2.getObj().getLength());
             return op1;
 		}
 		else{
-			return null;
+            op1.setIdentity(true);
+			return op1;
 		}
 		/*	String-Wise
 		 * 

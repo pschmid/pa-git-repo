@@ -20,6 +20,7 @@ public class Operation {
     private int userId;
     private int timeStamp;
     private HistoryBuffer otherSiteOperations;
+    private boolean identity;
 
     public Operation(DocumentObject object, int pos, String type,int userId, int timeStamp) {
         this.obj = object;
@@ -28,6 +29,7 @@ public class Operation {
         this.userId = userId;
         this.timeStamp = timeStamp;
         this.otherSiteOperations = new HistoryBuffer();
+        this.identity = false;
     }
 
     public Iterator<Operation> getOtherSitesOperations(){
@@ -44,6 +46,14 @@ public class Operation {
 	public boolean isDelete(){
 		return this.type.equals("DELETE");
 	}
+
+    public boolean isIdentity(){
+        return this.identity==true;
+    }
+
+    public void setIdentity(boolean identity){ this.identity = identity;}
+
+    public boolean getIdentity(){ return  identity; }
 
 	/**
 	 * @return the obj
@@ -120,7 +130,10 @@ public class Operation {
 
     public void print(String label){
         Logger log = Logger.getLogger(App.class);
-        log.info(label + this.getType() + " " + this.getObj().getObj() + " " + this.getPosition());
+        if (this.getObj() == null)
+            log.info(label + this.getType() + " " + "IDENTITY");
+        else
+            log.info(label + this.getType() + " " + this.getObj().getObj() + " " + this.getPosition());
     }
 
     /*

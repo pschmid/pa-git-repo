@@ -70,14 +70,15 @@ public class ConcurrencyControl {
 
         this.buffer.add(transOp);
 
-
-        if(transOp.isInsert()){
-            doc.addObject(obj, position, id);
+        if (!transOp.isIdentity()){
+            if(transOp.isInsert()){
+                doc.addObject(obj, position, id);
+            }
+            else if (transOp.isDelete()){
+                transOp.print("A VER ");
+                doc.removeObject(obj, position, id);
+            }
         }
-        else if (transOp.isDelete()){
-            doc.removeObject(obj, position, id);
-        }
-
     }
 
     public void printHistoryBuffer(){
@@ -87,6 +88,10 @@ public class ConcurrencyControl {
             + op.getTimeStamp());
 
         }
+    }
+
+    public void clearHistoryBuffer(){
+        this.buffer.getBuffer().clear();
     }
 	
 }

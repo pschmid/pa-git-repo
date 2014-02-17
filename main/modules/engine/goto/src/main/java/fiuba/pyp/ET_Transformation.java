@@ -25,6 +25,8 @@ public class ET_Transformation extends Transformation {
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
         Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+        if (!op2.isIdentity())
+            opAux.setIdentity(op1.getIdentity());
 		if (opAux.isInsert() && op2.isInsert()){
 			return ET_InsertInsert(opAux, op2);
 		}
@@ -87,8 +89,7 @@ public class ET_Transformation extends Transformation {
 			return op1;
 		}
 		else{
-			//Never reaches this point
-            op1.setObj(null);
+            op1.setIdentity(true);
 			return op1;
 		}
 	}
