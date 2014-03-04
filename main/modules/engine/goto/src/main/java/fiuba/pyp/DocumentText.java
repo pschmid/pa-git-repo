@@ -26,12 +26,19 @@ public class DocumentText extends Document{
 
     @Override
 	public void addObject(DocumentObject obj, int position, int id) {
-		// TODO Auto-generated method stub
-		String end = doc.substring(position);
-		String result = doc.substring(0, position);
+        // TODO ver el tema cuando es causality preservation que te cae en un 3er sitio una operacion para
+        // la siguiente posicion y todavia no te llego la primera.
+        //hay que agregar campos vacios al documento plano
+
+        if (position > doc.length()) {
+            //ver de usar un vector virtual y volcarlo al string cuando este completo
+        }
+
+        String end = doc.substring(position);
+        String result = doc.substring(0, position);
         result = result + obj.getObj() + end;
         this.doc = result;
-	}
+    }
 
 	/* 
 	 * @see fiuba.pyp.Document#removeObject(fiuba.pyp.DocumentObject, int, int)
@@ -47,5 +54,11 @@ public class DocumentText extends Document{
             this.doc = result;
         }
 	}
+
+    @Override
+    public void setDoc(String doc) {
+        this.doc = doc;
+    }
+
 
 }

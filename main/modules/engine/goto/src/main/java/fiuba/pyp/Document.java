@@ -21,5 +21,7 @@ public abstract class Document {
 	 * Removes a Document Object into the position of the Document by id
 	 */
 	public abstract void removeObject(DocumentObject obj, int position, int id);
-	
+
+
+    public abstract void setDoc(String doc);
 }
