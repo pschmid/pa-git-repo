@@ -290,6 +290,8 @@ public class GOTOTest {
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "");
     }
 
+    /*
+        Este Test No Cumple con los requisitos de la capa Superior a GOTO (Sistema Distribuido)
     @Test
     public void basicOneSiteCausalityPreservation(){
         ConcurrencyControl concurrencyControl = createDocument();
@@ -309,7 +311,7 @@ public class GOTOTest {
         runOperations(concurrencyControl,ops);
 
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "ab12");
-    }
+    }*/
 
     @Test
     public void basicOneSiteConvergence(){
