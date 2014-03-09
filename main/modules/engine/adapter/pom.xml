@@ -6,20 +6,13 @@
 
     <parent>
         <groupId>fiuba.pyp</groupId>
-        <artifactId>modules</artifactId>
+        <artifactId>engine</artifactId>
         <version>1.0</version>
     </parent>
 
-
-    <artifactId>engine</artifactId>
-    <name>PyP: Engine</name>
-    <packaging>pom</packaging>
+    <groupId>fiuba.pyp</groupId>
+    <artifactId>engine.adapter</artifactId>
     <version>1.0</version>
 
-    <modules>
-        <module>goto</module>
-        <module>adapter</module>
-    </modules>
 
-    
 </project>
