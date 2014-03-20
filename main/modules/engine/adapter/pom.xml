@@ -28,6 +28,11 @@
             <version>6.2.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>fiuba.pyp</groupId>
+            <artifactId>engine.goto</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

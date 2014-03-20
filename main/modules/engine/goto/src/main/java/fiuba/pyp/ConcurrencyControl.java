@@ -62,7 +62,7 @@ public class ConcurrencyControl {
 		execute(transOp);
 	}
 
-    public synchronized void execute(Operation transOp){
+    private synchronized void execute(Operation transOp){
         DocumentObject obj = transOp.getObj();
         int position = transOp.getPosition();
         int id = transOp.getId();
@@ -92,6 +92,10 @@ public class ConcurrencyControl {
 
     public void clearHistoryBuffer(){
         this.buffer.getBuffer().clear();
+    }
+
+    public Operation getLastOperationExecuted(){
+        return this.buffer.getBuffer().get(this.buffer.getBuffer().size());
     }
 	
 }
