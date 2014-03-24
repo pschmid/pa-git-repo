@@ -13,6 +13,7 @@ public class App
 
     public static void main( String[] args )
     {
+
         PropertyConfigurator.configure(App.class.getClassLoader().getResource(
                 "log4j.properties"));
         Logger log = Logger.getLogger(App.class);
