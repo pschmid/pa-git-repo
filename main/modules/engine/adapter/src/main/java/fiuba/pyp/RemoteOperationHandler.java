@@ -36,15 +36,18 @@ public class RemoteOperationHandler implements Runnable{
             public void run() {
                 try {
                     ServerSocket socket1 = new ServerSocket(PORT);
-                    Socket connection = null;
+                    Socket connection;
                     while (true) {
 
 
                         connection = socket1.accept();
                         connections.add(connection);
-                        Runnable runnable = new RemoteConnection(connection, ++count);
+                        Runnable runnable = new RemoteConnectionListener(connection, ++count);
                         Thread thread = new Thread(runnable);
                         thread.start();
+                        //runnable = new RemoteConnectionWriter(connection,count);
+                        //thread = new Thread(runnable);
+                        //thread.start();
                     }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -94,13 +97,21 @@ public class RemoteOperationHandler implements Runnable{
             Socket connection = new Socket(address, port);
             /** Instantiate a BufferedOutputStream object */
 
-            BufferedOutputStream bos = new BufferedOutputStream(connection.
-                    getOutputStream());
+            //BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
 
             /** Instantiate an OutputStreamWriter object with the optional character
              * encoding.
              */
-            OutputStreamWriter osw = new OutputStreamWriter(bos, "US-ASCII");
+            //OutputStreamWriter osw = new OutputStreamWriter(bos, "US-ASCII");
+
+
+            OutputStream os = connection.getOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            Operation op = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
+            NetworkObject networkObject = new NetworkObject(op, 1);
+            oos.writeObject(networkObject);
+            oos.flush();
+
 
 
             TimeStamp = new java.util.Date().toString();
@@ -108,29 +119,36 @@ public class RemoteOperationHandler implements Runnable{
                     " at " + TimeStamp +  (char) 13;
 
             /** Write across the socket connection and flush the buffer */
-            osw.write(process);
-            osw.flush();
+            //osw.write(process);
+            //osw.flush();
             /** Instantiate a BufferedInputStream object for reading
              /** Instantiate a BufferedInputStream object for reading
              * incoming socket streams.
              */
 
-            BufferedInputStream bis = new BufferedInputStream(connection.
-                    getInputStream());
+            //BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
             /**Instantiate an InputStreamReader with the optional
              * character encoding.
              */
 
-            InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
+            //InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
+
+            InputStream is = connection.getInputStream();
+            ObjectInputStream ois = new ObjectInputStream(is);
+            networkObject = (NetworkObject)ois.readObject();
+            if ( networkObject.getAck() == 1){
+                System.out.println("recibi el ack");
+            }
+
 
             /**Read the socket's InputStream and append to a StringBuffer */
-            int c;
-            while ( (c = isr.read()) != 13)
-                instr.append( (char) c);
+            //int c;
+            //while ( (c = isr.read()) != 13)
+              //  instr.append( (char) c);
 
             /** Close the socket connection. */
             connection.close();
-            System.out.println(instr);
+            //System.out.println(instr);
         }
         catch (IOException f) {
             System.out.println("IOException: " + f);

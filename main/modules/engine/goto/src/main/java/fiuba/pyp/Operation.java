@@ -6,13 +6,17 @@ package fiuba.pyp;
 import fiuba.pyp.Document;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  * @author pyp
  *
  */
-public class Operation {
+
+
+
+public class Operation implements Serializable{
 	
 	private DocumentObject obj;
 	private int position;

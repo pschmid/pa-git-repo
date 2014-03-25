@@ -3,13 +3,14 @@
  */
 package fiuba.pyp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author pyp
  *
  */
-public class HistoryBuffer {
+public class HistoryBuffer implements Serializable {
 	
 	private ArrayList<Operation> buffer;
 
