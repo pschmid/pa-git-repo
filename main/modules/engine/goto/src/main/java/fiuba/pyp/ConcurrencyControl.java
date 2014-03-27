@@ -62,6 +62,12 @@ public class ConcurrencyControl {
 		execute(transOp);
 	}
 
+    public synchronized Operation runOperation(Operation operation){
+        Operation transOp = algorithm.run(operation,this.buffer);
+        this.buffer.add(transOp);
+        return transOp;
+    }
+
     private synchronized void execute(Operation transOp){
         DocumentObject obj = transOp.getObj();
         int position = transOp.getPosition();

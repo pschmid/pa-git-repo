@@ -18,20 +18,46 @@ public class AddressDomain {
     *    private TreeMap<K,V> tree;
     **/
     private ConcurrencyControl concurrencyControl;
+
     private int levels;
 
-    public AddressDomain(int levels) {
+    private static AddressDomain INSTANCE = null;
+    // Private constructor suppresses
+    private AddressDomain(){
+        initialize();
+    }
+
+    // creador sincronizado para protegerse de posibles problemas  multi-hilo
+    private synchronized static void createInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new AddressDomain();
+        }
+    }
+
+    public static AddressDomain getInstance() {
+        createInstance();
+        return INSTANCE;
+    }
+
+    private void initialize() {
         this.concurrencyControl = ConcurrencyControl.getInstance();
+        this.levels = 1;
+    }
+
+    public int getLevels() {
+        return levels;
+    }
+
+    public void setLevels(int levels) {
         this.levels = levels;
     }
 
-    public ConcurrencyControl getConcurrencyControl() {
+    private ConcurrencyControl getConcurrencyControl() {
         return concurrencyControl;
     }
 
     public Operation getPrimitiveOperation(Operation newOp){
-        this.getConcurrencyControl().run(newOp);
-        return this.getConcurrencyControl().getLastOperationExecuted();
+        return this.getConcurrencyControl().runOperation(newOp);
     }
 
 
