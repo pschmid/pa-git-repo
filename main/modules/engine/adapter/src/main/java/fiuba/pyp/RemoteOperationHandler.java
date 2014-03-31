@@ -1,161 +1,88 @@
 package fiuba.pyp;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+import rice.environment.Environment;
+import rice.p2p.commonapi.NodeHandle;
+import rice.pastry.NodeIdFactory;
+import rice.pastry.PastryNode;
+import rice.pastry.PastryNodeFactory;
+import rice.pastry.socket.SocketPastryNodeFactory;
+import rice.pastry.standard.RandomNodeIdFactory;
+
+import javax.swing.event.EventListenerList;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by pablo on 09/03/14.
  */
-public class RemoteOperationHandler implements Runnable{
+public class RemoteOperationHandler{
 
-    private List<Operation> fromApplicationOperations;
+    private final Client app;
 
-    private List<Socket> connections;
-    private String TimeStamp;
-    private int ID;
-    private static int PORT = 19999;
-    private int count;
+    @Nullable
+    public Operation getNextRemoteOperation() {
+        //hacer la logica de administrar si llegan paquetes
+        //de un mismo user desordenados y devolver el correcto
+        NetworkObject networkObject = app.getNextRemoteOperation();
+        if(networkObject != null)
+            return networkObject.getOperation();
+        else return null;
 
-    public void start() {
+    }
 
-        //add a listener to de fromapplicationlist and send the package every time a new operations
-        //is addded to the list.
+    public void publishOperation(@NotNull Operation operation){
+        app.sendMulticast(operation);
+    }
 
-        //add a listener to the  fromremoteOperationList and every time a new operation is add, manage the logic way to
-        //send it to AOM.
+    public RemoteOperationHandler(int bindport, InetSocketAddress bootaddress,
+                       Environment env) throws Exception {
 
+        // Generate the NodeIds Randomly
+        NodeIdFactory nidFactory = new RandomNodeIdFactory(env);
 
+        // construct the PastryNodeFactory, this is how we use rice.pastry.socket
+        PastryNodeFactory factory = new SocketPastryNodeFactory(nidFactory, bindport, env);
 
-        System.out.println("MultipleSocketServer Initialized");
-        Runnable connectionHandler =  new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ServerSocket socket1 = new ServerSocket(PORT);
-                    Socket connection;
-                    while (true) {
+        // loop to construct the nodes/apps
+        //for (int curNode = 0; curNode < numNodes; curNode++) {
+        // construct a new node
+        PastryNode node = factory.newNode();
 
+        // construct a new scribe application
+        app = new Client(node);
+        //apps.add(app);
 
-                        connection = socket1.accept();
-                        connections.add(connection);
-                        Runnable runnable = new RemoteConnectionListener(connection, ++count);
-                        Thread thread = new Thread(runnable);
-                        thread.start();
-                        //runnable = new RemoteConnectionWriter(connection,count);
-                        //thread = new Thread(runnable);
-                        //thread.start();
-                    }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        node.boot(bootaddress);
 
+        // the node may require sending several messages to fully boot into the ring
+        synchronized(node) {
+            while(!node.isReady() && !node.joinFailed()) {
+                // delay so we don't busy-wait
+                node.wait(500);
+
+                // abort if can't join
+                if (node.joinFailed()) {
+                    throw new IOException("Could not join the FreePastry ring.  Reason:"+node.joinFailedReason());
+                }
             }
-        };
-        Thread thread = new Thread(connectionHandler);
-        thread.start();
-    }
-
-    RemoteOperationHandler(int i) {
-        this.fromApplicationOperations = new ArrayList<Operation>();
-        this.ID = i;
-        count = 0;
-        connections = new ArrayList<Socket>();
-        start();
-    }
-
-
-
-
-    public List<Operation> getFromApplicationOperations() {
-        return fromApplicationOperations;
-    }
-
-    public void setFromApplicationOperations(List<Operation> fromApplicationOperations) {
-        this.fromApplicationOperations = fromApplicationOperations;
-    }
-
-
-    @Override
-    public void run() {
-
-        /** Define a host server */
-        String host = "localhost";
-        /** Define a port */
-        int port = 19999;
-
-        StringBuffer instr = new StringBuffer();
-        String TimeStamp;
-        System.out.println("SocketClient initialized");
-        try {
-            /** Obtain an address object of the server */
-            InetAddress address = InetAddress.getByName(host);
-            /** Establish a socket connetion */
-            Socket connection = new Socket(address, port);
-            /** Instantiate a BufferedOutputStream object */
-
-            //BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-
-            /** Instantiate an OutputStreamWriter object with the optional character
-             * encoding.
-             */
-            //OutputStreamWriter osw = new OutputStreamWriter(bos, "US-ASCII");
-
-
-            OutputStream os = connection.getOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(os);
-            Operation op = new Operation(new DocumentCharacter("a"), 0, "INSERT", 1, 1);
-            NetworkObject networkObject = new NetworkObject(op, 1);
-            oos.writeObject(networkObject);
-            oos.flush();
-
-
-
-            TimeStamp = new java.util.Date().toString();
-            String process = "Calling the Socket Server on "+ host + " port " + port +
-                    " at " + TimeStamp +  (char) 13;
-
-            /** Write across the socket connection and flush the buffer */
-            //osw.write(process);
-            //osw.flush();
-            /** Instantiate a BufferedInputStream object for reading
-             /** Instantiate a BufferedInputStream object for reading
-             * incoming socket streams.
-             */
-
-            //BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
-            /**Instantiate an InputStreamReader with the optional
-             * character encoding.
-             */
-
-            //InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
-
-            InputStream is = connection.getInputStream();
-            ObjectInputStream ois = new ObjectInputStream(is);
-            networkObject = (NetworkObject)ois.readObject();
-            if ( networkObject.getAck() == 1){
-                System.out.println("recibi el ack");
-            }
-
-
-            /**Read the socket's InputStream and append to a StringBuffer */
-            //int c;
-            //while ( (c = isr.read()) != 13)
-              //  instr.append( (char) c);
-
-            /** Close the socket connection. */
-            connection.close();
-            //System.out.println(instr);
         }
-        catch (IOException f) {
-            System.out.println("IOException: " + f);
-        }
-        catch (Exception g) {
-            System.out.println("Exception: " + g);
-        }
+
+        System.out.println("Finished creating new node: " + node);
+
+        app.subscribe();
+        //app.startPublishTask();
+
+    }
+
+    public void addRemoteOperationListener(EventListener event){
+        this.app.addRemoteOperation(event);
     }
 
 }
+

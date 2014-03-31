@@ -36,6 +36,10 @@ public class Operation implements Serializable{
         this.identity = false;
     }
 
+    public String toString() {
+        return "Operation "+type+ obj.getObj()+"  in position "+position;
+    }
+
     public Iterator<Operation> getOtherSitesOperations(){
         return otherSiteOperations.getBuffer().iterator();
     }

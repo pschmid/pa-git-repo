@@ -33,6 +33,16 @@
             <artifactId>engine.goto</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-example</artifactId>
+            <version>4.0.17.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freePastry</groupId>
+            <artifactId>pastry</artifactId>
+            <version>2.1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
