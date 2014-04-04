@@ -5,6 +5,7 @@ package fiuba.pyp;
 
 import fiuba.pyp.Document;
 import org.apache.log4j.Logger;
+import rice.pastry.Id;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -21,12 +22,12 @@ public class Operation implements Serializable{
 	private DocumentObject obj;
 	private int position;
 	private String type;
-    private int userId;
+    private rice.p2p.commonapi.Id userId;
     private int timeStamp;
     private HistoryBuffer otherSiteOperations;
     private boolean identity;
 
-    public Operation(DocumentObject object, int pos, String type,int userId, int timeStamp) {
+    public Operation(DocumentObject object, int pos, String type, rice.p2p.commonapi.Id userId, int timeStamp) {
         this.obj = object;
         this.position = pos;
         this.type = type;
@@ -42,6 +43,9 @@ public class Operation implements Serializable{
 
     public Iterator<Operation> getOtherSitesOperations(){
         return otherSiteOperations.getBuffer().iterator();
+    }
+    public void removeOtherSiteOperation(Operation op) {
+        otherSiteOperations.getBuffer().remove(op);
     }
     public void setOtherSitesOperations(Operation op){
         otherSiteOperations.add(op);
@@ -94,14 +98,14 @@ public class Operation implements Serializable{
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public rice.p2p.commonapi.Id getId() {
 		return userId;
 	}
 
 	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
+     * @param id the id to set
+     */
+	public void setId(rice.p2p.commonapi.Id id) {
 		this.userId = id;
 	}
 
@@ -128,13 +132,6 @@ public class Operation implements Serializable{
         this.timeStamp = timeStamp;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public void print(String label){
         Logger log = Logger.getLogger(App.class);
@@ -179,5 +176,15 @@ public class Operation implements Serializable{
         }
         return true;
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Operation operation = (Operation) obj;
+        if (this.getId() == operation.getId()  &&
+                this.getTimeStamp() == operation.getTimeStamp())
+            return true;
+        else
+            return false;
     }
 }

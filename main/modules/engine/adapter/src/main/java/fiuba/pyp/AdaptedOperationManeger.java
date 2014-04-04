@@ -1,6 +1,9 @@
 package fiuba.pyp;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import rice.environment.Environment;
+import rice.p2p.commonapi.Id;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -8,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 /**
  * Created by pablo on 24/03/14.
@@ -15,17 +19,35 @@ import java.net.InetSocketAddress;
 public class AdaptedOperationManeger {
 
     RemoteOperationHandler remoteOperationHandler;
+    ConcurrencyControl concurrencyControl;
+
+    int bindport;
+
 
     public AdaptedOperationManeger(int bindport, InetSocketAddress bootaddress,Environment env) {
+
+        this.bindport = bindport;
+        startRemoteHandler(bootaddress, env);
+        concurrencyControl = ConcurrencyControl.getInstance();
+        concurrencyControl.clearHistoryBuffer();
+        concurrencyControl.setDoc(new DocumentText());
+
+    }
+
+    private void startRemoteHandler(InetSocketAddress bootaddress, Environment env) {
         try {
             remoteOperationHandler = new RemoteOperationHandler(bindport,bootaddress,env);
             remoteOperationHandler.addRemoteOperationListener(new RemoteOperationListener() {
                 @Override
                 public void dispatchNewOperationArrive(Event event) {
 
-                    Operation nextOp = remoteOperationHandler.getNextRemoteOperation();
-                    if(nextOp!=null)
-                        System.out.println("llego esta operacion" + nextOp);
+                    //Operation nextOp = remoteOperationHandler.getNextRemoteOperation();
+                    //if(nextOp!=null){
+                        //System.out.println("llego esta operacion" + nextOp);
+
+                        //concurrencyControl.run(nextOp);
+                        //System.out.println("documen contains " + concurrencyControl.getDoc().getDoc());
+                    //}
 
                 }
             });
@@ -39,8 +61,8 @@ public class AdaptedOperationManeger {
 
         }
         start();
-
     }
+
     public void start(){
 
 
@@ -53,8 +75,36 @@ public class AdaptedOperationManeger {
                     s = br.readLine();
                     while(!s.equals("exit")){
                         s = br.readLine();
-                        Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", 1, 1);
+                        int count = 2;
+                        Id localId = remoteOperationHandler.getId();
+
+                        if(s.equals("1")){
+                            Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", localId, 1);
+                            remoteOperationHandler.publishOperation(a);
+                        }else
+                        if(s.equals("2")) {
+                            Operation op = remoteOperationHandler.getNextRemoteOperation();
+                            Id otherId = op.getId();
+                            Operation b = new Operation(new DocumentCharacter("b"), 1, "INSERT", localId, 2);
+                            Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", otherId, 1);
+                            b.setOtherSitesOperations(a);
+                            remoteOperationHandler.publishOperation(b);
+
+                        }else
+                        if(s.equals("3")) {
+                            Operation b = new Operation(new DocumentCharacter("h"), 1, "INSERT", localId, 1);
+                            remoteOperationHandler.publishOperation(b);
+
+                        }else{
+
+                        Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, count++);
                         remoteOperationHandler.publishOperation(newOp);
+                        concurrencyControl.run(newOp);
+                    }
+
+
+                        System.out.println("documen contains " + concurrencyControl.getDoc().getDoc());
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,6 +140,5 @@ public class AdaptedOperationManeger {
 
 
     }
-
 
 }

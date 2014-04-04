@@ -24,7 +24,7 @@ public class GOTOTest {
             concurrencyControl.run(op);
         }
     }
-
+/*
     @Test()
     public void basicOneSiteInsertion() {
 
@@ -313,7 +313,7 @@ public class GOTOTest {
 
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "ab12");
     }*/
-
+/*
     @Test
     public void basicOneSiteConvergence(){
         ConcurrencyControl concurrencyControl = createDocument();
@@ -371,6 +371,7 @@ public class GOTOTest {
         runOperations(concurrencyControl,ops2);
         Assert.assertEquals(concurrencyControl.getDoc().toString(), "A1CDE");
     }
+    */
 
 
 }

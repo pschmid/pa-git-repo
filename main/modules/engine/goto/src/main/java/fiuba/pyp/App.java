@@ -20,12 +20,12 @@ public class App
         log.info("Hello World! Pyp");
         // Configure Log4J
         ConcurrencyControl concurrencyControl = ConcurrencyControl.getInstance();
-        oneSiteReceiveOperations(concurrencyControl, log);
+        //oneSiteReceiveOperations(concurrencyControl, log);
         concurrencyControl.clearHistoryBuffer();
-        siteDeletesOperations(concurrencyControl, log);
+        //siteDeletesOperations(concurrencyControl, log);
 
     }
-
+/*
     public static void oneSiteReceiveOperations(ConcurrencyControl concurrencyControl, Logger log){
         concurrencyControl.setDoc(new DocumentText());
 
@@ -81,5 +81,5 @@ public class App
         log.info(concurrencyControl.getDoc().toString().equals("agjk"));
 
     }
-
+*/
 }

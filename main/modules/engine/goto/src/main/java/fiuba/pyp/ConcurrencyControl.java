@@ -4,6 +4,7 @@
 package fiuba.pyp;
 
 import org.apache.log4j.Logger;
+import rice.p2p.commonapi.Id;
 
 /**
  *
@@ -71,7 +72,7 @@ public class ConcurrencyControl {
     private synchronized void execute(Operation transOp){
         DocumentObject obj = transOp.getObj();
         int position = transOp.getPosition();
-        int id = transOp.getId();
+        Id id = transOp.getId();
 
 
         this.buffer.add(transOp);

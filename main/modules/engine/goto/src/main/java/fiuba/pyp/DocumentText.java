@@ -3,6 +3,8 @@
  */
 package fiuba.pyp;
 
+import rice.p2p.commonapi.Id;
+
 /**
  * @author pyp
  *
@@ -25,7 +27,7 @@ public class DocumentText extends Document{
     }
 
     @Override
-	public void addObject(DocumentObject obj, int position, int id) {
+	public void addObject(DocumentObject obj, int position, Id id) {
         // TODO ver el tema cuando es causality preservation que te cae en un 3er sitio una operacion para
         // la siguiente posicion y todavia no te llego la primera.
         //hay que agregar campos vacios al documento plano
@@ -44,7 +46,7 @@ public class DocumentText extends Document{
 	 * @see fiuba.pyp.Document#removeObject(fiuba.pyp.DocumentObject, int, int)
 	 */
 	@Override
-	public void removeObject(DocumentObject obj, int position, int id) {
+	public void removeObject(DocumentObject obj, int position, Id id) {
 		// TODO check if we need to check equalities between obj and obj in doc
         if (obj != null){
             System.out.println("DOCUMENT ---- " + doc);
@@ -58,6 +60,10 @@ public class DocumentText extends Document{
     @Override
     public void setDoc(String doc) {
         this.doc = doc;
+    }
+
+    public String getDoc() {
+        return doc;
     }
 
 

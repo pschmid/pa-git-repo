@@ -3,19 +3,16 @@ package fiuba.pyp;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import rice.environment.Environment;
-import rice.p2p.commonapi.NodeHandle;
+import rice.p2p.commonapi.Id;
 import rice.pastry.NodeIdFactory;
 import rice.pastry.PastryNode;
 import rice.pastry.PastryNodeFactory;
 import rice.pastry.socket.SocketPastryNodeFactory;
 import rice.pastry.standard.RandomNodeIdFactory;
 
-import javax.swing.event.EventListenerList;
+import java.awt.*;
 import java.io.*;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.*;
 
 /**
@@ -23,17 +20,24 @@ import java.util.*;
  */
 public class RemoteOperationHandler{
 
-    private final Client app;
+    private Client app;
+    private OperationManager operationManager;
+
+    public Id getId() {
+        return app.endpoint.getLocalNodeHandle().getId();
+    }
 
     @Nullable
-    public Operation getNextRemoteOperation() {
-        //hacer la logica de administrar si llegan paquetes
-        //de un mismo user desordenados y devolver el correcto
+    private Operation getNextNetworkOperation() {
         NetworkObject networkObject = app.getNextRemoteOperation();
-        if(networkObject != null)
+        if (networkObject != null)
             return networkObject.getOperation();
         else return null;
-
+    }
+    //get next ejecutable operation
+    @Nullable
+    public Operation getNextRemoteOperation(){
+        return  operationManager.getNextOperation();
     }
 
     public void publishOperation(@NotNull Operation operation){
@@ -76,12 +80,23 @@ public class RemoteOperationHandler{
         System.out.println("Finished creating new node: " + node);
 
         app.subscribe();
+        operationManager = new OperationManager(getId());
         //app.startPublishTask();
 
     }
 
     public void addRemoteOperationListener(EventListener event){
-        this.app.addRemoteOperation(event);
+        RemoteOperationListener arrivalEvent = new RemoteOperationListener() {
+            @Override
+            public void dispatchNewOperationArrive(Event event) {
+
+                Operation nextOp = getNextNetworkOperation();
+                operationManager.addOperation(nextOp);
+                operationManager.printQueue();
+
+            }
+        };
+        this.app.addRemoteOperationListener(arrivalEvent);
     }
 
 }

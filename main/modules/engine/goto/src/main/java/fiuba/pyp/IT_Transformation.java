@@ -24,7 +24,7 @@ public class IT_Transformation extends Transformation {
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
-        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getUserId(), op1.getTimeStamp());
+        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getId(), op1.getTimeStamp());
         if (!op2.isIdentity())
             opAux.setIdentity(op1.getIdentity());
 		if (opAux.isInsert() && op2.isInsert()){
@@ -56,7 +56,7 @@ public class IT_Transformation extends Transformation {
 	public Operation IT_InsertInsert(Operation op1, Operation op2) {
         if (op1.getPosition() < op2.getPosition())
 			return op1;
-        else if (op1.getPosition() == op2.getPosition() && op1.getId() < op2.getId()) {
+        else if (op1.getPosition() == op2.getPosition() && op1.getId().compareTo(op2.getId()) < 0) {
             return op1;
         }
 		else{

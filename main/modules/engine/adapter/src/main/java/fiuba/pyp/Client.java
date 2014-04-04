@@ -181,7 +181,7 @@ public class Client implements ScribeClient, Application {
         return myScribe.getChildren(myTopic);
     }
 
-    public void addRemoteOperation(EventListener listener)
+    public void addRemoteOperationListener(EventListener listener)
     {
         listeners.add(RemoteOperationListener.class, (RemoteOperationListener) listener);
     }
