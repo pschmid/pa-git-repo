@@ -26,6 +26,7 @@ public class Operation implements Serializable{
     private int timeStamp;
     private HistoryBuffer otherSiteOperations;
     private boolean identity;
+    private int localTimeStamp=1;
 
     public Operation(DocumentObject object, int pos, String type, rice.p2p.commonapi.Id userId, int timeStamp) {
         this.obj = object;
@@ -38,23 +39,23 @@ public class Operation implements Serializable{
     }
 
     public String toString() {
-        return "Operation "+type+ obj.getObj()+"  in position "+position;
+        return "Operation "+type+ obj.getObj()+"  in position "+position + " in time: " +timeStamp;
     }
 
     public Iterator<Operation> getOtherSitesOperations(){
         return otherSiteOperations.getBuffer().iterator();
     }
+
     public void removeOtherSiteOperation(Operation op) {
         otherSiteOperations.getBuffer().remove(op);
     }
     public void setOtherSitesOperations(Operation op){
         otherSiteOperations.add(op);
     }
-
 	public boolean isInsert(){
 		return this.type.equals("INSERT");
 	}
-	
+
 	public boolean isDelete(){
 		return this.type.equals("DELETE");
 	}
@@ -64,6 +65,14 @@ public class Operation implements Serializable{
     }
 
     public void setIdentity(boolean identity){ this.identity = identity;}
+
+    public int getLocalTimeStamp() {
+        return localTimeStamp;
+    }
+
+    public void setLocalTimeStamp(int localTimeStamp) {
+        this.localTimeStamp = localTimeStamp;
+    }
 
     public boolean getIdentity(){ return  identity; }
 

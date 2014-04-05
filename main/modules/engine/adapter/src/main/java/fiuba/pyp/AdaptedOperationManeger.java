@@ -18,8 +18,9 @@ import java.util.ArrayList;
  */
 public class AdaptedOperationManeger {
 
+    LocalOperationHandler localOperationHandler;
     RemoteOperationHandler remoteOperationHandler;
-    ConcurrencyControl concurrencyControl;
+    AddressDomain addressDomain;
 
     int bindport;
 
@@ -27,8 +28,10 @@ public class AdaptedOperationManeger {
     public AdaptedOperationManeger(int bindport, InetSocketAddress bootaddress,Environment env) {
 
         this.bindport = bindport;
+        this.localOperationHandler = new LocalOperationHandler();
+        this.addressDomain = AddressDomain.getInstance();
         startRemoteHandler(bootaddress, env);
-        concurrencyControl = ConcurrencyControl.getInstance();
+        ConcurrencyControl concurrencyControl = addressDomain.getConcurrencyControl();
         concurrencyControl.clearHistoryBuffer();
         concurrencyControl.setDoc(new DocumentText());
 
@@ -66,13 +69,14 @@ public class AdaptedOperationManeger {
     public void start(){
 
 
-        Runnable remotePublisherHandler = new Runnable() {
+        Runnable localPublisherHandler = new Runnable() {
             @Override
             public void run() {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String s = null;
                 try {
                     s = br.readLine();
+                    int cant = 1;
                     while(!s.equals("exit")){
                         s = br.readLine();
                         int count = 2;
@@ -97,13 +101,24 @@ public class AdaptedOperationManeger {
 
                         }else{
 
-                        Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, count++);
+                        Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
+                        newOp.setLocalTimeStamp(cant);
+                        cant++;
                         remoteOperationHandler.publishOperation(newOp);
-                        concurrencyControl.run(newOp);
-                    }
+                        addressDomain.getConcurrencyControl().run(newOp);
+
+                        Operation op = remoteOperationHandler.getNextRemoteOperation();
+                        while (op != null){
+                            addressDomain.getConcurrencyControl().run(op);
+                            op = remoteOperationHandler.getNextRemoteOperation();
+
+                        }
 
 
-                        System.out.println("documen contains " + concurrencyControl.getDoc().getDoc());
+                        }
+
+
+                        System.out.println("documen contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
 
                     }
                 } catch (IOException e) {
@@ -112,7 +127,7 @@ public class AdaptedOperationManeger {
 
             }
         };
-        Thread threadWriter = new Thread(remotePublisherHandler);
+        Thread threadWriter = new Thread(localPublisherHandler);
         threadWriter.start();
 
     }

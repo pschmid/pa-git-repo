@@ -101,8 +101,11 @@ public class ConcurrencyControl {
         this.buffer.getBuffer().clear();
     }
 
-    public Operation getLastOperationExecuted(){
-        return this.buffer.getBuffer().get(this.buffer.getBuffer().size());
+    public int getTimeStamp(){
+        if (this.buffer.getBuffer().isEmpty()){
+            return 1;
+        }
+        return this.buffer.getBuffer().size() + 1;
     }
 	
 }

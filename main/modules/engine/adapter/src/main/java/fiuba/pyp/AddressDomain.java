@@ -53,7 +53,7 @@ public class AddressDomain {
         this.levels = levels;
     }
 
-    private ConcurrencyControl getConcurrencyControl() {
+    public ConcurrencyControl getConcurrencyControl() {
         return concurrencyControl;
     }
 

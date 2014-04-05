@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class AdaptedOperation implements Serializable{
 
     private Operation operation;
-    private AddressDomain addressDomain;
 
     private AddressDomain getAddressDomain() {
         return AddressDomain.getInstance();
