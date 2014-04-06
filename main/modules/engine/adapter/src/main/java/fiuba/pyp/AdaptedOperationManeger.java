@@ -13,6 +13,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by pablo on 24/03/14.
  */
@@ -73,13 +75,12 @@ public class AdaptedOperationManeger {
             @Override
             public void run() {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                String s = null;
+                String s = "";
                 try {
-                    s = br.readLine();
+//                    s = br.readLine();
                     int cant = 1;
                     while(!s.equals("exit")){
                         s = br.readLine();
-                        int count = 2;
                         Id localId = remoteOperationHandler.getId();
 
                         if(s.equals("1")){
@@ -101,19 +102,26 @@ public class AdaptedOperationManeger {
 
                         }else{
 
-                        Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
-                        newOp.setLocalTimeStamp(cant);
-                        cant++;
-                        remoteOperationHandler.publishOperation(newOp);
-                        addressDomain.getConcurrencyControl().run(newOp);
+                            /*
+                            Aca en realidad deberia llamarse al localOperationHandler pidiendo la proxima operacion
+                            asi se le tagea el Id y se corre en el goto antes de enviarla por la red
 
-                        Operation op = remoteOperationHandler.getNextRemoteOperation();
-                        while (op != null){
-                            addressDomain.getConcurrencyControl().run(op);
-                            op = remoteOperationHandler.getNextRemoteOperation();
+                            Operation localOp = localOperationHandler.getNextOperation();
+                            localOp.setId(localId);
+                            localOp.setLocalTimeStamp(cant);
+                            localOp = addressDomain.getConcurrencyControl().runOperation(localOp);
+                            remoteOperationHandler.publishOperation(localOp);
+                            AdaptedOperation adaptedOperation = localOperationHandler.transformToAdaptedOperation(localOp);
+                            if (adaptedOperation != null){
+                                localOperationHandler.run(adaptedOperation);
+                            }
+                            */
 
-                        }
-
+                            Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
+                            newOp.setLocalTimeStamp(cant);
+                            cant++;
+                            remoteOperationHandler.publishOperation(newOp);
+                            addressDomain.getConcurrencyControl().run(newOp);
 
                         }
 
@@ -127,8 +135,41 @@ public class AdaptedOperationManeger {
 
             }
         };
+
+
+        Runnable remotePublisherHandler = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(true){
+
+                        Operation op = remoteOperationHandler.getNextRemoteOperation();
+
+                        if (op != null){
+                            addressDomain.getConcurrencyControl().run(op);
+//                            op = remoteOperationHandler.getNextRemoteOperation();
+
+                            System.out.println("documen contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+                        }
+                        else{
+                            sleep(3600);
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        };
+
         Thread threadWriter = new Thread(localPublisherHandler);
         threadWriter.start();
+
+        Thread threadWriter2 = new Thread(remotePublisherHandler);
+        threadWriter2.start();
 
     }
 

@@ -34,9 +34,9 @@ public class RemoteOperationHandler{
             return networkObject.getOperation();
         else return null;
     }
-    //get next ejecutable operation
+    //get next executable operation
     @Nullable
-    public Operation getNextRemoteOperation(){
+    public synchronized Operation getNextRemoteOperation(){
         return  operationManager.getNextOperation();
     }
 

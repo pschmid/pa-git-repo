@@ -1,5 +1,7 @@
 package fiuba.pyp;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +21,29 @@ public class LocalOperationHandler {
     }
 
 
-
     public synchronized Operation executeLocalOperation(AdaptedOperation adaptedOperation){
-        return adaptedOperation.transformPrimitiveOperation();
+        return adaptedOperation.transformToPrimitiveOperation();
+    }
+
+    @Nullable
+    public synchronized Operation getNextOperation() {
+
+        if (adaptedOperations.isEmpty()){
+            return null;
+        }
+        else{
+            return executeLocalOperation(this.adaptedOperations.get(0));
+        }
+
+    }
+
+    @Nullable
+    public synchronized AdaptedOperation transformToAdaptedOperation(Operation operation){
+        return null;
+    }
+
+    public void run(AdaptedOperation adaptedOperation){
+
     }
 
 }

@@ -14,12 +14,13 @@ public class OperationManager {
 
     PriorityQueue<Operation> queue;
     List<Operation> operationList;
-
     //Guarda el proximo numero de operacion que tiene que ejecutar para cada sitio en forma local
     Map<Id, Integer> stateVector;
 
     public OperationManager(Id localId) {
         this.queue = new PriorityQueue<Operation>(10,new OperationComparator(localId));
+
+        //Esta lista es thread-safe
         this.operationList = new CopyOnWriteArrayList<Operation>();
         this.stateVector = new HashMap<Id, Integer>();
     }
@@ -36,8 +37,8 @@ public class OperationManager {
 //        return queue.poll();
         Operation res = null;
 
-        System.out.println(stateVector.toString());
-        System.out.println(operationList.toString());
+//        System.out.println(stateVector.toString());
+//        System.out.println(operationList.toString());
 
         for(Operation op: operationList){
             if (! stateVector.containsKey(op.getId())){
@@ -49,9 +50,7 @@ public class OperationManager {
                 stateVector.put(op.getId(), stateVector.get(op.getId()) + 1);
                 return res;
             }
-
         }
-
         return res;
     }
 

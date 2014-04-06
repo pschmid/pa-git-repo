@@ -21,8 +21,9 @@ public class AdaptedOperation implements Serializable{
         this.operation = operation;
     }
 
-    public Operation transformPrimitiveOperation(){
-        return getAddressDomain().getPrimitiveOperation(this.operation);
+    public Operation transformToPrimitiveOperation(){
+//        return getAddressDomain().getPrimitiveOperation(this.operation);
+        return this.operation;
     }
 
 }
