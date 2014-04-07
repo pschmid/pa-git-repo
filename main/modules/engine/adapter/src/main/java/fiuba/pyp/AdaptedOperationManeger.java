@@ -106,27 +106,36 @@ public class AdaptedOperationManeger {
                             Aca en realidad deberia llamarse al localOperationHandler pidiendo la proxima operacion
                             asi se le tagea el Id y se corre en el goto antes de enviarla por la red
 
-                            Operation localOp = localOperationHandler.getNextOperation();
+
+                            AdaptedOperation localAdaptedOp = localOperationHandler.getNextAdaptedOperation();
+                            Operation localOp = localOperationHandler.executeLocalOperation(localAdaptedOp);
                             localOp.setId(localId);
                             localOp.setLocalTimeStamp(cant);
                             localOp = addressDomain.getConcurrencyControl().runOperation(localOp);
-                            remoteOperationHandler.publishOperation(localOp);
                             AdaptedOperation adaptedOperation = localOperationHandler.transformToAdaptedOperation(localOp);
+
+                            //Se deberia enviar la operacion adaptada al otro lado
+                            remoteOperationHandler.publishOperation(localOp);
+
                             if (adaptedOperation != null){
                                 localOperationHandler.run(adaptedOperation);
                             }
                             */
 
+
                             Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
                             newOp.setLocalTimeStamp(cant);
                             cant++;
-                            remoteOperationHandler.publishOperation(newOp);
                             addressDomain.getConcurrencyControl().run(newOp);
+
+                            //Aca esta mal porque se envia a la red la operacion original sin transformar anteriormente
+                            //aviso porque a veces pasa que no escribe en la posicion que deberia
+                            remoteOperationHandler.publishOperation(newOp);
 
                         }
 
 
-                        System.out.println("documen contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+                        System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
 
                     }
                 } catch (IOException e) {
@@ -149,10 +158,10 @@ public class AdaptedOperationManeger {
                             addressDomain.getConcurrencyControl().run(op);
 //                            op = remoteOperationHandler.getNextRemoteOperation();
 
-                            System.out.println("documen contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+                            System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
                         }
                         else{
-                            sleep(3600);
+                            sleep(1);
                         }
 
                     }

@@ -26,13 +26,13 @@ public class LocalOperationHandler {
     }
 
     @Nullable
-    public synchronized Operation getNextOperation() {
+    public synchronized AdaptedOperation getNextAdaptedOperation() {
 
         if (adaptedOperations.isEmpty()){
             return null;
         }
         else{
-            return executeLocalOperation(this.adaptedOperations.get(0));
+            return this.adaptedOperations.get(0);
         }
 
     }
