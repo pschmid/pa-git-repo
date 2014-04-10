@@ -23,45 +23,26 @@ public class RemoteOperationHandler{
     private Client app;
     private OperationManager operationManager;
 
-    public Id getId() {
-        return app.endpoint.getLocalNodeHandle().getId();
-    }
+    public RemoteOperationHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) throws Exception{
+        // Loads pastry configurations
+        Environment env = new Environment();
 
-    @Nullable
-    private Operation getNextNetworkOperation() {
-        NetworkObject networkObject = app.getNextRemoteOperation();
-        if (networkObject != null)
-            return networkObject.getOperation();
-        else return null;
-    }
-    //get next executable operation
-    @Nullable
-    public synchronized Operation getNextRemoteOperation(){
-        return  operationManager.getNextOperation();
-    }
-
-    public void publishOperation(@NotNull Operation operation){
-        app.sendMulticast(operation);
-    }
-
-    public RemoteOperationHandler(int bindport, InetSocketAddress bootaddress,
-                       Environment env) throws Exception {
+        // disable the UPnP setting (in case you are testing this on a NATted LAN)
+        env.getParameters().setString("nat_search_policy","never");
 
         // Generate the NodeIds Randomly
         NodeIdFactory nidFactory = new RandomNodeIdFactory(env);
 
         // construct the PastryNodeFactory, this is how we use rice.pastry.socket
-        PastryNodeFactory factory = new SocketPastryNodeFactory(nidFactory, bindport, env);
+        PastryNodeFactory factory = new SocketPastryNodeFactory(nidFactory, localIp.getAddress(),localIp.getPort(), env);
 
-        // loop to construct the nodes/apps
-        //for (int curNode = 0; curNode < numNodes; curNode++) {
-        // construct a new node
+        // create a node
         PastryNode node = factory.newNode();
 
         // construct a new scribe application
         app = new Client(node);
-        //apps.add(app);
 
+        //boot to the ring
         node.boot(bootaddress);
 
         // the node may require sending several messages to fully boot into the ring
@@ -82,7 +63,27 @@ public class RemoteOperationHandler{
         app.subscribe();
         operationManager = new OperationManager(getId());
         //app.startPublishTask();
+    }
 
+    public Id getId() {
+        return app.endpoint.getLocalNodeHandle().getId();
+    }
+
+    @Nullable
+    private Operation getNextNetworkOperation() {
+        NetworkObject networkObject = app.getNextRemoteOperation();
+        if (networkObject != null)
+            return networkObject.getOperation();
+        else return null;
+    }
+    //get next executable operation
+    @Nullable
+    public synchronized Operation getNextRemoteOperation(){
+        return  operationManager.getNextOperation();
+    }
+
+    public void publishOperation(@NotNull Operation operation){
+        app.sendMulticast(operation);
     }
 
     public void addRemoteOperationListener(EventListener event){

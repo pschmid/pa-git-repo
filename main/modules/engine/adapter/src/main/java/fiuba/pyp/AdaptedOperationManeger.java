@@ -24,45 +24,27 @@ public class AdaptedOperationManeger {
     RemoteOperationHandler remoteOperationHandler;
     AddressDomain addressDomain;
 
-    int bindport;
+    public AdaptedOperationManeger(InetSocketAddress localIP, InetSocketAddress bootaddress) {
 
-
-    public AdaptedOperationManeger(int bindport, InetSocketAddress bootaddress,Environment env) {
-
-        this.bindport = bindport;
         this.localOperationHandler = new LocalOperationHandler();
         this.addressDomain = AddressDomain.getInstance();
-        startRemoteHandler(bootaddress, env);
+        startRemoteHandler(localIP,bootaddress);
         ConcurrencyControl concurrencyControl = addressDomain.getConcurrencyControl();
         concurrencyControl.clearHistoryBuffer();
         concurrencyControl.setDoc(new DocumentText());
 
     }
 
-    private void startRemoteHandler(InetSocketAddress bootaddress, Environment env) {
+    private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) {
         try {
-            remoteOperationHandler = new RemoteOperationHandler(bindport,bootaddress,env);
-            remoteOperationHandler.addRemoteOperationListener(new RemoteOperationListener() {
-                @Override
-                public void dispatchNewOperationArrive(Event event) {
-
-                    //Operation nextOp = remoteOperationHandler.getNextRemoteOperation();
-                    //if(nextOp!=null){
-                        //System.out.println("llego esta operacion" + nextOp);
-
-                        //concurrencyControl.run(nextOp);
-                        //System.out.println("documen contains " + concurrencyControl.getDoc().getDoc());
-                    //}
-
-                }
-            });
+            remoteOperationHandler = new RemoteOperationHandler(localIp,bootaddress);
         } catch (Exception e) {
             // remind user how to use
             System.out.println("Usage:");
             System.out
-                    .println("java [-cp FreePastry-<version>.jar] rice.tutorial.scribe.ScribeTutorial localbindport bootIP bootPort numNodes");
+                    .println("localIp localbindport bootIP bootPort");
             System.out
-                    .println("example java rice.tutorial.scribe.ScribeTutorial 9001 pokey.cs.almamater.edu 9001 10");
+                    .println("example 192.168.56.101 9001 192.168.56.1 9001");
 
         }
         start();
@@ -77,7 +59,6 @@ public class AdaptedOperationManeger {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String s = "";
                 try {
-//                    s = br.readLine();
                     int cant = 1;
                     while(!s.equals("exit")){
                         s = br.readLine();
@@ -184,25 +165,18 @@ public class AdaptedOperationManeger {
 
 
     public static void main(String[] args) throws Exception {
-        // Loads pastry configurations
-        Environment env = new Environment();
+        // the Ip and port to use locally
+        InetAddress localIpAddr = InetAddress.getByName(args[0]);
+        int bindport = Integer.parseInt(args[1]);
+        InetSocketAddress localIP = new InetSocketAddress(localIpAddr, bindport);
 
-        // disable the UPnP setting (in case you are testing this on a NATted LAN)
-        env.getParameters().setString("nat_search_policy","never");
+        // build the bootaddress from the command line args
+        InetAddress bootaddr = InetAddress.getByName(args[2]);
+        int bootport = Integer.parseInt(args[3]);
+        InetSocketAddress bootaddress = new InetSocketAddress(bootaddr, bootport);
 
-
-            // the port to use locally
-            int bindport = Integer.parseInt(args[0]);
-
-            // build the bootaddress from the command line args
-            InetAddress bootaddr = InetAddress.getByName(args[1]);
-            int bootport = Integer.parseInt(args[2]);
-            InetSocketAddress bootaddress = new InetSocketAddress(bootaddr, bootport);
-
-            // launch our node!
-
-            AdaptedOperationManeger dt = new AdaptedOperationManeger(bindport, bootaddress, env);
-
+        // launch our node!
+        AdaptedOperationManeger dt = new AdaptedOperationManeger(localIP, bootaddress);
 
     }
 
