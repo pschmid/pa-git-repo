@@ -111,6 +111,7 @@ public class AdaptedOperationManeger {
                             addressDomain.getConcurrencyControl().run(newOp);
                             newOp = addressDomain.getConcurrencyControl().getLastOperation();
                             newOp.setStateVector(remoteOperationHandler.getStateVector());
+//                            System.out.println(newOp.getStateVector().toString());
 
                             //Aca esta mal porque se envia a la red la operacion original sin transformar anteriormente
                             //aviso porque a veces pasa que no escribe en la posicion que deberia

@@ -43,8 +43,8 @@ public class OperationManager {
     public Operation getNextOperation() {
 //        return queue.poll();
         Operation res = null;
-        System.out.println(stateVector.toString());
-        System.out.println(operationList.toString());
+//        System.out.println(stateVector.toString());
+//        System.out.println(operationList.toString());
         for(Operation op: operationList){
             if (! stateVector.containsKey(op.getId())){
                 stateVector.put(op.getId(), 1);

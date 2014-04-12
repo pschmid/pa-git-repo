@@ -109,7 +109,7 @@ public class ConcurrencyControl {
     }
 
     public Operation getLastOperation(){
-        return buffer.getBuffer().get(buffer.getBuffer().size());
+        return buffer.getBuffer().get(buffer.getBuffer().size()-1);
     }
 	
 }
