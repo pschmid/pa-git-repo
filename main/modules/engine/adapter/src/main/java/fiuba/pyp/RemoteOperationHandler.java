@@ -82,6 +82,10 @@ public class RemoteOperationHandler{
         return  operationManager.getNextOperation();
     }
 
+    public HashMap<Id, Integer> getStateVector(){
+        return operationManager.cloneHashMap();
+    }
+
     public void publishOperation(@NotNull Operation operation){
         app.sendMulticast(operation);
     }

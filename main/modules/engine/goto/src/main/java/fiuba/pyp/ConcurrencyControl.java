@@ -107,5 +107,9 @@ public class ConcurrencyControl {
         }
         return this.buffer.getBuffer().size() + 1;
     }
+
+    public Operation getLastOperation(){
+        return buffer.getBuffer().get(buffer.getBuffer().size());
+    }
 	
 }

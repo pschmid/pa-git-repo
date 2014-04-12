@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import rice.pastry.Id;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -27,6 +28,7 @@ public class Operation implements Serializable{
     private HistoryBuffer otherSiteOperations;
     private boolean identity;
     private int localTimeStamp=1;
+    private HashMap<rice.p2p.commonapi.Id, Integer> stateVector;
 
     public Operation(DocumentObject object, int pos, String type, rice.p2p.commonapi.Id userId, int timeStamp) {
         this.obj = object;
@@ -49,13 +51,13 @@ public class Operation implements Serializable{
     public void removeOtherSiteOperation(Operation op) {
         otherSiteOperations.getBuffer().remove(op);
     }
+
     public void setOtherSitesOperations(Operation op){
         otherSiteOperations.add(op);
     }
-	public boolean isInsert(){
+    public boolean isInsert(){
 		return this.type.equals("INSERT");
 	}
-
 	public boolean isDelete(){
 		return this.type.equals("DELETE");
 	}
@@ -75,6 +77,14 @@ public class Operation implements Serializable{
     }
 
     public boolean getIdentity(){ return  identity; }
+
+    public HashMap<rice.p2p.commonapi.Id, Integer> getStateVector() {
+        return stateVector;
+    }
+
+    public void setStateVector(HashMap<rice.p2p.commonapi.Id, Integer> stateVector) {
+        this.stateVector = stateVector;
+    }
 
 	/**
 	 * @return the obj

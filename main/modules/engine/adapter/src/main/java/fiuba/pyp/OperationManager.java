@@ -12,54 +12,80 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class OperationManager {
 
-    PriorityQueue<Operation> queue;
+//    PriorityQueue<Operation> queue;
     List<Operation> operationList;
     //Guarda el proximo numero de operacion que tiene que ejecutar para cada sitio en forma local
     Map<Id, Integer> stateVector;
 
     public OperationManager(Id localId) {
-        this.queue = new PriorityQueue<Operation>(10,new OperationComparator(localId));
-
+//        this.queue = new PriorityQueue<Operation>(10,new OperationComparator(localId));
         //Esta lista es thread-safe
         this.operationList = new CopyOnWriteArrayList<Operation>();
         this.stateVector = new HashMap<Id, Integer>();
     }
     public void addOperation(@NotNull Operation op) {
-        queue.add(op);
+//        queue.add(op);
         operationList.add(op);
         if (! stateVector.containsKey(op.getId())){
             stateVector.put(op.getId(), 1);
         }
     }
 
+    public HashMap<Id, Integer> cloneHashMap(){
+        HashMap<Id, Integer> auxMap = new HashMap<Id, Integer>();
+        for(Id key:stateVector.keySet()){
+            auxMap.put(key, stateVector.get(key));
+        }
+        return auxMap;
+    }
+
     @Nullable
     public Operation getNextOperation() {
 //        return queue.poll();
         Operation res = null;
-
-//        System.out.println(stateVector.toString());
-//        System.out.println(operationList.toString());
-
+        System.out.println(stateVector.toString());
+        System.out.println(operationList.toString());
         for(Operation op: operationList){
             if (! stateVector.containsKey(op.getId())){
                 stateVector.put(op.getId(), 1);
             }
+            //Primera condicion para que este causally ready
             if (op.getLocalTimeStamp() == stateVector.get(op.getId())){
-                res = op;
-                operationList.remove(op);
-                stateVector.put(op.getId(), stateVector.get(op.getId()) + 1);
-                return res;
+                //Segunda condicion para que este causally ready
+                if (compareStateVectors(op)){
+                    res = op;
+                    operationList.remove(op);
+                    stateVector.put(op.getId(), stateVector.get(op.getId()) + 1);
+                    return res;
+                }
             }
         }
         return res;
     }
 
+    private boolean compareStateVectors(Operation operationCompare){
+        Id localId = operationCompare.getId();
+        for(Id key:operationCompare.getStateVector().keySet()){
+            if (key != localId){
+                if (!stateVector.containsKey(key)){
+                    return false;
+                }
+                else if (stateVector.get(key) < operationCompare.getStateVector().get(key)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void printQueue() {
         for(Operation op: operationList){
-            System.out.println("operacion: "+ op);
+            System.out.println("operation: "+ op);
         }
     }
 
+
+    /*
     private class OperationComparator implements Comparator<Operation>
     {
         private final Id localId;
@@ -108,6 +134,7 @@ public class OperationManager {
 
         }
     }
+    */
 
 
 }

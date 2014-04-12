@@ -95,6 +95,7 @@ public class AdaptedOperationManeger {
                             localOp = addressDomain.getConcurrencyControl().runOperation(localOp);
                             AdaptedOperation adaptedOperation = localOperationHandler.transformToAdaptedOperation(localOp);
 
+                            localOp.setStateVector(remoteOperationHandler.getStateVector());
                             //Se deberia enviar la operacion adaptada al otro lado
                             remoteOperationHandler.publishOperation(localOp);
 
@@ -108,6 +109,8 @@ public class AdaptedOperationManeger {
                             newOp.setLocalTimeStamp(cant);
                             cant++;
                             addressDomain.getConcurrencyControl().run(newOp);
+                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
+                            newOp.setStateVector(remoteOperationHandler.getStateVector());
 
                             //Aca esta mal porque se envia a la red la operacion original sin transformar anteriormente
                             //aviso porque a veces pasa que no escribe en la posicion que deberia
