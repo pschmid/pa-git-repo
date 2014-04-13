@@ -40,8 +40,18 @@ public class Operation implements Serializable{
         this.identity = false;
     }
 
+    public Operation cloneOperation(){
+        Operation opAux = new Operation(this.getObj(), this.getPosition(), this.getType(), this.getId(), this.getTimeStamp());
+        opAux.otherSiteOperations = this.otherSiteOperations;
+//        opAux.identity = this.getIdentity();
+        opAux.setLocalTimeStamp(this.getLocalTimeStamp());
+        opAux.setStateVector(this.getStateVector());
+        return opAux;
+    }
+
     public String toString() {
-        return "Operation "+type+ obj.getObj()+"  in position "+position + " in time: " +timeStamp;
+        return "Operation "+type+ " "+ obj.getObj()+"  in position "+position + " in time: " +timeStamp+ " local: "
+                +localTimeStamp + " other ops: " + otherSiteOperations.getBuffer();
     }
 
     public Iterator<Operation> getOtherSitesOperations(){

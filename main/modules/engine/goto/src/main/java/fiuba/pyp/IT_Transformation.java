@@ -24,7 +24,8 @@ public class IT_Transformation extends Transformation {
 	@Override
 	public Operation transform(Operation op1, Operation op2) {
 		// TODO Auto-generated method stub
-        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getId(), op1.getTimeStamp());
+//        Operation opAux = new Operation(op1.getObj(), op1.getPosition(), op1.getType(), op1.getId(), op1.getTimeStamp());
+        Operation opAux = op1.cloneOperation();
         if (!op2.isIdentity())
             opAux.setIdentity(op1.getIdentity());
 		if (opAux.isInsert() && op2.isInsert()){

@@ -38,6 +38,11 @@ public class AdaptedOperationManeger {
     private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) {
         try {
             remoteOperationHandler = new RemoteOperationHandler(localIp,bootaddress);
+            remoteOperationHandler.addRemoteOperationListener(new RemoteOperationListener() {
+                @Override
+                public void dispatchNewOperationArrive(Event event) {
+                }
+            });
         } catch (Exception e) {
             // remind user how to use
             System.out.println("Usage:");
@@ -58,8 +63,8 @@ public class AdaptedOperationManeger {
             public void run() {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String s = "";
+                int cant = 1;
                 try {
-                    int cant = 1;
                     while(!s.equals("exit")){
                         s = br.readLine();
                         Id localId = remoteOperationHandler.getId();
@@ -108,13 +113,14 @@ public class AdaptedOperationManeger {
                             Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
                             newOp.setLocalTimeStamp(cant);
                             cant++;
-                            addressDomain.getConcurrencyControl().run(newOp);
-                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
                             newOp.setStateVector(remoteOperationHandler.getStateVector());
-//                            System.out.println(newOp.getStateVector().toString());
+                            addressDomain.getConcurrencyControl().run(newOp);
+//                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
+//                            newOp.setStateVector(remoteOperationHandler.getStateVector());
 
-                            //Aca esta mal porque se envia a la red la operacion original sin transformar anteriormente
-                            //aviso porque a veces pasa que no escribe en la posicion que deberia
+                            System.out.println(newOp.toString() + "------ contador: " + cant);
+                            System.out.println(newOp.getStateVector().toString());
+
                             remoteOperationHandler.publishOperation(newOp);
 
                         }
@@ -123,7 +129,7 @@ public class AdaptedOperationManeger {
                         System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
 
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -143,6 +149,7 @@ public class AdaptedOperationManeger {
                             addressDomain.getConcurrencyControl().run(op);
 //                            op = remoteOperationHandler.getNextRemoteOperation();
 
+//                            System.out.println(op.getStateVector().toString());
                             System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
                         }
                         else{
