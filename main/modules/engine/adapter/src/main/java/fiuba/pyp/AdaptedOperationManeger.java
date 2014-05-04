@@ -109,15 +109,35 @@ public class AdaptedOperationManeger {
                             }
                             */
 
+                            //Para ejecutar por consola se escribe: letra+tipo+letra  -> ai0 , bd1
+                            int pos = 0;
+                            String character = s.substring(0,1);
+                            String type = "INSERT";
+                            if (s.length() > 1 && (s.substring(1,2).equals("D") || s.substring(1,2).equals("d"))){
+                                type = "DELETE";
+                            }
+                            if (s.length() >= 2){
+                                try {
+                                    pos = Integer.parseInt(s.substring(2));
+                                }catch (NumberFormatException e){
+                                    pos = 0;
+                                }
+                                if (type == "INSERT" && pos > addressDomain.getConcurrencyControl().getBufferLength()){
+                                    pos = 0;
+                                }
+                                else if(type == "DELETE" && pos >= addressDomain.getConcurrencyControl().getBufferLength()){
+                                    pos = 0;
+                                }
+                            }
 
-                            Operation newOp = new Operation(new DocumentCharacter(s), 0, "INSERT", localId, addressDomain.getConcurrencyControl().getTimeStamp());
+                            Operation newOp = new Operation(new DocumentCharacter(character), pos, type, localId, addressDomain.getConcurrencyControl().getTimeStamp());
                             newOp.setLocalTimeStamp(cant);
                             cant++;
                             newOp.setStateVector(remoteOperationHandler.getStateVector());
                             addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
                             addressDomain.getConcurrencyControl().run(newOp);
-//                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
-//                            newOp.setStateVector(remoteOperationHandler.getStateVector());
+                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
+                            newOp.setStateVector(remoteOperationHandler.getStateVector());
 
                             System.out.println(newOp.toString() + "------ contador: " + cant);
                             System.out.println(newOp.getStateVector().toString());

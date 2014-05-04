@@ -120,4 +120,8 @@ public class ConcurrencyControl {
         }
     }
 
+    public int getBufferLength(){
+        return buffer.getBuffer().size();
+    }
+
 }
