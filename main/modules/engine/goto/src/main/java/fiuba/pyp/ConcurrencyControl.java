@@ -111,5 +111,13 @@ public class ConcurrencyControl {
     public Operation getLastOperation(){
         return buffer.getBuffer().get(buffer.getBuffer().size()-1);
     }
-	
+
+    public void setOtherSitesOperations(Operation operation){
+        for (Operation op : this.buffer.getBuffer()){
+            if (op.getId() != operation.getId()){
+                operation.setOtherSitesOperations(op);
+            }
+        }
+    }
+
 }

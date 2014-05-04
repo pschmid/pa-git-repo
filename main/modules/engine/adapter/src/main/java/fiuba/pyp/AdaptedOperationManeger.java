@@ -114,6 +114,7 @@ public class AdaptedOperationManeger {
                             newOp.setLocalTimeStamp(cant);
                             cant++;
                             newOp.setStateVector(remoteOperationHandler.getStateVector());
+                            addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
                             addressDomain.getConcurrencyControl().run(newOp);
 //                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
 //                            newOp.setStateVector(remoteOperationHandler.getStateVector());
