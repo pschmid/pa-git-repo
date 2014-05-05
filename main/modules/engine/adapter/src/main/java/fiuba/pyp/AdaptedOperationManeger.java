@@ -37,12 +37,9 @@ public class AdaptedOperationManeger {
 
     private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) {
         try {
+            
             remoteOperationHandler = new RemoteOperationHandler(localIp,bootaddress);
-            remoteOperationHandler.addRemoteOperationListener(new RemoteOperationListener() {
-                @Override
-                public void dispatchNewOperationArrive(Event event) {
-                }
-            });
+
         } catch (Exception e) {
             // remind user how to use
             System.out.println("Usage:");
@@ -57,7 +54,6 @@ public class AdaptedOperationManeger {
 
     public void start(){
 
-
         Runnable localPublisherHandler = new Runnable() {
             @Override
             public void run() {
@@ -68,27 +64,7 @@ public class AdaptedOperationManeger {
                     while(!s.equals("exit")){
                         s = br.readLine();
                         Id localId = remoteOperationHandler.getId();
-
-                        if(s.equals("1")){
-                            Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", localId, 1);
-                            remoteOperationHandler.publishOperation(a);
-                        }else
-                        if(s.equals("2")) {
-                            Operation op = remoteOperationHandler.getNextRemoteOperation();
-                            Id otherId = op.getId();
-                            Operation b = new Operation(new DocumentCharacter("b"), 1, "INSERT", localId, 2);
-                            Operation a = new Operation(new DocumentCharacter("a"), 0, "INSERT", otherId, 1);
-                            b.setOtherSitesOperations(a);
-                            remoteOperationHandler.publishOperation(b);
-
-                        }else
-                        if(s.equals("3")) {
-                            Operation b = new Operation(new DocumentCharacter("h"), 1, "INSERT", localId, 1);
-                            remoteOperationHandler.publishOperation(b);
-
-                        }else{
-
-                            /*
+                                                    /*
                             Aca en realidad deberia llamarse al localOperationHandler pidiendo la proxima operacion
                             asi se le tagea el Id y se corre en el goto antes de enviarla por la red
 
@@ -109,47 +85,47 @@ public class AdaptedOperationManeger {
                             }
                             */
 
-                            //Para ejecutar por consola se escribe: letra+tipo+letra  -> ai0 , bd1
-                            int pos = 0;
-                            String character = s.substring(0,1);
-                            String type = "INSERT";
-                            if (s.length() > 1 && (s.substring(1,2).equals("D") || s.substring(1,2).equals("d"))){
-                                type = "DELETE";
+                        //Para ejecutar por consola se escribe: letra+tipo+letra  -> ai0 , bd1
+                        int pos = 0;
+                        String character = s.substring(0,1);
+                        String type = "INSERT";
+                        if (s.length() > 1 && (s.substring(1,2).equals("D") || s.substring(1,2).equals("d"))){
+                            type = "DELETE";
+                        }
+                        if (s.length() >= 2){
+                            try {
+                                pos = Integer.parseInt(s.substring(2));
+                            }catch (NumberFormatException e){
+                                pos = 0;
                             }
-                            if (s.length() >= 2){
-                                try {
-                                    pos = Integer.parseInt(s.substring(2));
-                                }catch (NumberFormatException e){
-                                    pos = 0;
-                                }
-                                if (type == "INSERT" && pos > addressDomain.getConcurrencyControl().getBufferLength()){
-                                    pos = 0;
-                                }
-                                else if(type == "DELETE" && pos >= addressDomain.getConcurrencyControl().getBufferLength()){
-                                    pos = 0;
-                                }
+                            if (type == "INSERT" && pos > addressDomain.getConcurrencyControl().getBufferLength()){
+                                pos = 0;
                             }
-
-                            Operation newOp = new Operation(new DocumentCharacter(character), pos, type, localId, addressDomain.getConcurrencyControl().getTimeStamp());
-                            newOp.setLocalTimeStamp(cant);
-                            cant++;
-                            newOp.setStateVector(remoteOperationHandler.getStateVector());
-                            addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
-                            addressDomain.getConcurrencyControl().run(newOp);
-                            newOp = addressDomain.getConcurrencyControl().getLastOperation();
-                            newOp.setStateVector(remoteOperationHandler.getStateVector());
-
-                            System.out.println(newOp.toString() + "------ contador: " + cant);
-                            System.out.println(newOp.getStateVector().toString());
-
-                            remoteOperationHandler.publishOperation(newOp);
-
+                            else if(type == "DELETE" && pos >= addressDomain.getConcurrencyControl().getBufferLength()){
+                                pos = 0;
+                            }
                         }
 
+                        Operation newOp = new Operation(new DocumentCharacter(character), pos, type, localId, addressDomain.getConcurrencyControl().getTimeStamp());
+                        newOp.setLocalTimeStamp(cant);
+                        cant++;
+                        newOp.setStateVector(remoteOperationHandler.getStateVector());
+                        addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
+                        addressDomain.getConcurrencyControl().run(newOp);
+                        newOp = addressDomain.getConcurrencyControl().getLastOperation();
+                        newOp.setStateVector(remoteOperationHandler.getStateVector());
 
-                        System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+                        System.out.println(newOp.toString() + "------ contador: " + cant);
+                        System.out.println(newOp.getStateVector().toString());
+
+                        remoteOperationHandler.publishOperation(newOp);
 
                     }
+
+
+                    System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

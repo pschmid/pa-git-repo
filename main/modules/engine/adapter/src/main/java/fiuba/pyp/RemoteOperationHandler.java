@@ -62,6 +62,7 @@ public class RemoteOperationHandler{
 
         app.subscribe();
         operationManager = new OperationManager(getId());
+        addRemoteOperationListener();
         //app.startPublishTask();
     }
 
@@ -90,7 +91,7 @@ public class RemoteOperationHandler{
         app.sendMulticast(operation);
     }
 
-    public void addRemoteOperationListener(EventListener event){
+    public void addRemoteOperationListener(){
         RemoteOperationListener arrivalEvent = new RemoteOperationListener() {
             @Override
             public void dispatchNewOperationArrive(Event event) {
