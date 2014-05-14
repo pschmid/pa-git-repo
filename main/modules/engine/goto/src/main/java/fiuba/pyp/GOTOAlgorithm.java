@@ -35,7 +35,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
         int timestamp = 0;
         Logger log = Logger.getLogger(App.class);
         ArrayList<Operation> operationBuffer = historyBuffer.getBuffer();
-		for (Operation opBuffer : operationBuffer){
+		Operation result = operation;
+        for (Operation opBuffer : operationBuffer){
             timestamp+=1;
 
             if(opBuffer.isIndependent(operation)){
@@ -75,14 +76,14 @@ public class GOTOAlgorithm extends AlgorithmControl{
             else{
                 log.info(opBuffer.getObj().getObj() + "from " + opBuffer.getId() + " is dependent " +
                         operation.getObj().getObj() + "from " + opBuffer.getId());
-                return operation;
+                result = operation;
             }
 
 		}
         if(operationBuffer.isEmpty())
             log.info("not operation in history buffer. Adding " + operation.getObj().getObj() );
         //historyBuffer.add(operation);
-		return operation;
+		return result;
 	}
 
     private ArrayList<Operation> getTransposeBuffer(ArrayList<Operation> operationBuffer, int i, Integer key) {
@@ -126,7 +127,11 @@ public class GOTOAlgorithm extends AlgorithmControl{
     private ArrayList<Operation> getTailOperations(ArrayList<Operation> operationBuffer, int i) {
         ArrayList<Operation> tailOperations = new ArrayList<Operation>();
         if (i <= operationBuffer.size()){
-            tailOperations.addAll(i, operationBuffer);}
+            for(int idx= i ; idx< operationBuffer.size() ; idx++ ) {
+                tailOperations.add(operationBuffer.get(idx));
+            }
+//            tailOperations.addAll(i, operationBuffer);
+        }
         return tailOperations;
     }
 
