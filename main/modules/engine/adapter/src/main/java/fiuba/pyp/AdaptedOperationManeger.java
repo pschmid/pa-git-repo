@@ -115,8 +115,8 @@ public class AdaptedOperationManeger {
                         newOp = addressDomain.getConcurrencyControl().getLastOperation();
                         newOp.setStateVector(remoteOperationHandler.getStateVector());
 
-                        System.out.println(newOp.toString() + "------ contador: " + cant);
-                        System.out.println(newOp.getStateVector().toString());
+//                        System.out.println(newOp.toString() + "------ contador: " + cant);
+//                        System.out.println(newOp.getStateVector().toString());
 
                         remoteOperationHandler.publishOperation(newOp);
 
