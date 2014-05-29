@@ -22,6 +22,8 @@ import static java.lang.Thread.sleep;
 public class Principal extends javax.swing.JFrame implements ActionListener {
 
     public AdaptedOperationManeger adaptedOperationManeger;
+    private int lastDeleteCaretPosition;
+    private String lastText;
 
     public Principal() {
         initComponents();
@@ -29,6 +31,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         txtNumLineas.append(numLin + "\n");
         areaTexto.setComponentPopupMenu(jPopupMenu1);
         poneAcciones();
+        lastDeleteCaretPosition = 0; lastText = "";
         start();
 
     }
@@ -457,9 +460,12 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             
             //Borra reemplazando con nada.
 //          areaTexto.replaceRange("", areaTexto.getCaretPosition()-1, areaTexto.getCaretPosition());
-            this.sendEventToManager("DELETE", c, areaTexto.getCaretPosition() + 1);
-
-        	for (String s : filas) {
+            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0))
+                if (!(lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE ))
+                    this.sendEventToManager("DELETE", c, areaTexto.getCaretPosition() + 1);
+            lastDeleteCaretPosition = areaTexto.getCaretPosition();
+        	lastText = areaTexto.getText();
+            for (String s : filas) {
                 txtNumLineas.append(numLin + "\n");
                 numLin++;
             }
