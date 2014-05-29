@@ -17,7 +17,11 @@ import fiuba.pyp.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
+import static java.lang.Thread.sleep;
+
 public class Principal extends javax.swing.JFrame implements ActionListener {
+
+    public AdaptedOperationManeger adaptedOperationManeger;
 
     public Principal() {
         initComponents();
@@ -25,6 +29,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         txtNumLineas.append(numLin + "\n");
         areaTexto.setComponentPopupMenu(jPopupMenu1);
         poneAcciones();
+        start();
 
     }
 //Este método sirve para agregar las acciones a cada componente
@@ -279,7 +284,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new Principal().setVisible(true);
 
                 // the Ip and port to use locally
                 try {
@@ -294,6 +298,10 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
                     // launch our node!
                     AdaptedOperationManeger dt = new AdaptedOperationManeger(localIP, bootaddress);
+                    Principal p = new Principal();
+                    p.setVisible(true);
+                    p.adaptedOperationManeger = dt;
+
                 }
                 catch (UnknownHostException ex){
                     java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -434,24 +442,23 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 //Este método sirve principalmente para ir añadiendo numeros de linea, 
 
     public void presionaTecla(KeyEvent evt) {
+        String c = Character.toString(evt.getKeyChar());
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             numLin++;
             txtNumLineas.append(numLin + "\n");
-            
-            String c = Character.toString(evt.getKeyChar());
-        	areaTexto.insert(c, areaTexto.getCaretPosition());
-        	System.out.println(evt);
-            
+
+//        	areaTexto.insert(c, areaTexto.getCaretPosition());
+        	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() - 1);
+
         } else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
             
             //Borra reemplazando con nada.
-            areaTexto.replaceRange("", areaTexto.getCaretPosition()-1, areaTexto.getCaretPosition());
-        	System.out.println(evt);
-            ///////////////////////
-        	
+//          areaTexto.replaceRange("", areaTexto.getCaretPosition()-1, areaTexto.getCaretPosition());
+            this.sendEventToManager("DELETE", c, areaTexto.getCaretPosition() + 1);
+
         	for (String s : filas) {
                 txtNumLineas.append(numLin + "\n");
                 numLin++;
@@ -462,10 +469,9 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 numLin = 1;
             }
         }
-        else{
-        	String c = Character.toString(evt.getKeyChar());
-        	areaTexto.insert(c, areaTexto.getCaretPosition());
-        	System.out.println(evt);
+        else if (Character.isLetterOrDigit(evt.getKeyCode())) {
+//          areaTexto.insert(c, areaTexto.getCaretPosition());
+            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition() - 1);
         }
     }
 
@@ -485,4 +491,50 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             txtNumLineas.append(numLin + "\n");
         }
     }
+
+    public void sendEventToManager(String type,String character, int position){
+        this.adaptedOperationManeger.captureEventFromApp(type, character, position);
+    }
+
+    public void start(){
+        Runnable remoteHandler = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(true){
+                        if (adaptedOperationManeger != null){
+                            Operation op = adaptedOperationManeger.sendOperationToApp();
+                            if (op != null){
+                                System.out.println(op.toString());
+                                executeRemoteOperation(op);
+                                }
+                            else{
+                                sleep(1);
+                            }
+                        }
+                        else{
+                            sleep(10);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread threadR = new Thread(remoteHandler);
+        threadR.start();
+    }
+
+    public void executeRemoteOperation(Operation operation){
+        if (operation.isInsert()){
+            areaTexto.insert(operation.getObj().getObj(), operation.getPosition() );
+        }
+        else{
+            guardaFilas();
+            areaTexto.replaceRange("", operation.getPosition()-1, operation.getPosition() );
+        }
+
+    }
+
 }

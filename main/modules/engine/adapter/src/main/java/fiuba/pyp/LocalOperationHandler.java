@@ -12,8 +12,23 @@ public class LocalOperationHandler {
 
     private List<AdaptedOperation> adaptedOperations;
 
+    public List<Operation> getOperationEvents() {
+        return operationEvents;
+    }
+
+    public void setOperationEvents(List<Operation> operationEvents) {
+        this.operationEvents = operationEvents;
+    }
+
+    public void addOperationEvent(Operation operation){
+        this.operationEvents.add(operation);
+    }
+
+    private List<Operation> operationEvents;
+
     public LocalOperationHandler() {
         this.adaptedOperations = new ArrayList<AdaptedOperation>();
+        this.operationEvents = new ArrayList<Operation>();
     }
 
     public List<AdaptedOperation> getAdaptedOperations() {

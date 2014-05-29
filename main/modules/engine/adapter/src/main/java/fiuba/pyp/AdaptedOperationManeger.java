@@ -1,5 +1,6 @@
 package fiuba.pyp;
 
+import com.sun.istack.internal.Nullable;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import rice.environment.Environment;
@@ -23,9 +24,10 @@ public class AdaptedOperationManeger {
     LocalOperationHandler localOperationHandler;
     RemoteOperationHandler remoteOperationHandler;
     AddressDomain addressDomain;
+    int localCounter=1;
 
     public AdaptedOperationManeger(InetSocketAddress localIP, InetSocketAddress bootaddress) {
-
+        this.localCounter = 1;
         this.localOperationHandler = new LocalOperationHandler();
         this.addressDomain = AddressDomain.getInstance();
         startRemoteHandler(localIP,bootaddress);
@@ -33,6 +35,31 @@ public class AdaptedOperationManeger {
         concurrencyControl.clearHistoryBuffer();
         concurrencyControl.setDoc(new DocumentText());
 
+    }
+
+    public synchronized void captureEventFromApp(String type, String character, int position){
+        Id localId = remoteOperationHandler.getId();
+        Operation newOp = new Operation(new DocumentCharacter(character), position, type, localId, addressDomain.getConcurrencyControl().getTimeStamp());
+        newOp.setLocalTimeStamp(localCounter);
+        localCounter++;
+        newOp.setStateVector(remoteOperationHandler.getStateVector());
+        addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
+        newOp = addressDomain.getConcurrencyControl().runOperation(newOp);
+        newOp.setStateVector(remoteOperationHandler.getStateVector());
+        remoteOperationHandler.publishOperation(newOp);
+
+    }
+
+    @Nullable
+    public Operation sendOperationToApp(){
+        if (localOperationHandler.getOperationEvents().isEmpty()){
+            return null;
+        }
+        else{
+            Operation operation = localOperationHandler.getOperationEvents().get(0);
+            localOperationHandler.getOperationEvents().remove(operation);
+            return operation;
+        }
     }
 
     private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) {
@@ -64,7 +91,7 @@ public class AdaptedOperationManeger {
                     while(!s.equals("exit")){
                         s = br.readLine();
                         Id localId = remoteOperationHandler.getId();
-                                                    /*
+                            /*
                             Aca en realidad deberia llamarse al localOperationHandler pidiendo la proxima operacion
                             asi se le tagea el Id y se corre en el goto antes de enviarla por la red
 
@@ -143,11 +170,7 @@ public class AdaptedOperationManeger {
                         Operation op = remoteOperationHandler.getNextRemoteOperation();
 
                         if (op != null){
-                            addressDomain.getConcurrencyControl().run(op);
-//                            op = remoteOperationHandler.getNextRemoteOperation();
-
-//                            System.out.println(op.getStateVector().toString());
-                            System.out.println("document contains " + addressDomain.getConcurrencyControl().getDoc().getDoc());
+                            localOperationHandler.addOperationEvent(addressDomain.getConcurrencyControl().runOperation(op));
                         }
                         else{
                             sleep(1);
@@ -163,8 +186,8 @@ public class AdaptedOperationManeger {
 
         };
 
-        Thread threadWriter = new Thread(localPublisherHandler);
-        threadWriter.start();
+//        Thread threadWriter = new Thread(localPublisherHandler);
+//        threadWriter.start();
 
         Thread threadWriter2 = new Thread(remotePublisherHandler);
         threadWriter2.start();

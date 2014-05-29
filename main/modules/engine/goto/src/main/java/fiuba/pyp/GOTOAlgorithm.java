@@ -68,20 +68,20 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         return it.transform(operation, tailOperations);
                     }*/
                 }
-                log.info("independent operation. Adding " + operation.getObj().getObj() );
+//                log.info("independent operation. Adding " + operation.getObj().getObj() );
                 ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, timestamp-1);
                 return it.transform(operation, tailOperations);
 
             }
             else{
-                log.info(opBuffer.getObj().getObj() + "from " + opBuffer.getId() + " is dependent " +
-                        operation.getObj().getObj() + "from " + opBuffer.getId());
+//                log.info(opBuffer.getObj().getObj() + "from " + opBuffer.getId() + " is dependent " +
+//                        operation.getObj().getObj() + "from " + opBuffer.getId());
                 result = operation;
             }
 
 		}
-        if(operationBuffer.isEmpty())
-            log.info("not operation in history buffer. Adding " + operation.getObj().getObj() );
+//        if(operationBuffer.isEmpty())
+//            log.info("not operation in history buffer. Adding " + operation.getObj().getObj() );
         //historyBuffer.add(operation);
 		return result;
 	}
