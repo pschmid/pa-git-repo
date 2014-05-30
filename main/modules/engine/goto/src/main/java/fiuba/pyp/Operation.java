@@ -43,7 +43,6 @@ public class Operation implements Serializable{
     public Operation cloneOperation(){
         Operation opAux = new Operation(this.getObj(), this.getPosition(), this.getType(), this.getId(), this.getTimeStamp());
         opAux.otherSiteOperations = this.otherSiteOperations;
-//        opAux.identity = this.getIdentity();
         opAux.setLocalTimeStamp(this.getLocalTimeStamp());
         opAux.setStateVector(this.getStateVector());
         return opAux;

@@ -143,7 +143,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         txtNumLineas.setColumns(3);
         txtNumLineas.setEditable(false);
         txtNumLineas.setRows(1);
-        jScrollPane2.setViewportView(txtNumLineas);
+//        jScrollPane2.setViewportView(txtNumLineas);
 
         getContentPane().add(jScrollPane2, java.awt.BorderLayout.LINE_START);
 
@@ -450,7 +450,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             numLin++;
             txtNumLineas.append(numLin + "\n");
 
-//        	areaTexto.insert(c, areaTexto.getCaretPosition());
         	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() - 1);
 
         } else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -476,7 +475,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             }
         }
         else if (Character.isLetterOrDigit(evt.getKeyCode())) {
-//          areaTexto.insert(c, areaTexto.getCaretPosition());
             this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition() - 1);
         }
     }
@@ -515,11 +513,11 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                                 executeRemoteOperation(op);
                                 }
                             else{
-                                sleep(1);
+                                sleep(5);
                             }
                         }
                         else{
-                            sleep(10);
+                            sleep(100);
                         }
                     }
                 }

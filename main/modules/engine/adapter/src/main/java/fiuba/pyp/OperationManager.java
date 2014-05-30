@@ -12,21 +12,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class OperationManager {
 
-//    PriorityQueue<Operation> queue;
     List<Operation> operationList;
     //Guarda el proximo numero de operacion que tiene que ejecutar para cada sitio en forma local
     Map<Id, Integer> stateVector;
     Id localId;
 
     public OperationManager(Id localId) {
-//        this.queue = new PriorityQueue<Operation>(10,new OperationComparator(localId));
         //Esta lista es thread-safe
         this.operationList = new CopyOnWriteArrayList<Operation>();
         this.stateVector = new HashMap<Id, Integer>();
         this.localId = localId;
     }
     public void addOperation(@NotNull Operation op) {
-//        queue.add(op);
         operationList.add(op);
         if (! stateVector.containsKey(op.getId())){
             stateVector.put(op.getId(), 1);
@@ -43,10 +40,7 @@ public class OperationManager {
 
     @Nullable
     public Operation getNextOperation() {
-//        return queue.poll();
         Operation res = null;
-//        System.out.println(stateVector.toString());
-//        System.out.println(operationList.toString());
         for(Operation op: operationList){
             if (! stateVector.containsKey(op.getId())){
                 stateVector.put(op.getId(), 1);
@@ -85,58 +79,6 @@ public class OperationManager {
             System.out.println("operation: "+ op);
         }
     }
-
-
-    /*
-    private class OperationComparator implements Comparator<Operation>
-    {
-        private final Id localId;
-
-
-        public OperationComparator(Id localId) {
-            this.localId = localId;
-        }
-
-        @Override
-        public int compare(Operation o1, Operation o2) {
-
-            if(o1.getId() == localId  && o2.getId() == localId){
-                if(o1.getTimeStamp() < o2.getTimeStamp()) {
-                    return -1;
-                }else
-                    return 1;
-            }
-
-            if(o1.getId() == localId && o2.getId() != localId) {
-                return -1;
-            }
-
-            if(o1.getId() != localId && o2.getId() == localId) {
-                return 1;
-            }
-
-
-            if(o1.getId() != localId && o1.getId() == o2.getId()  &&  o1.getTimeStamp()>o2.getTimeStamp())
-                return 1;
-            if(o1.getId() != localId && o1.getId() == o2.getId()  &&  o1.getTimeStamp()<o2.getTimeStamp())
-                return -1;
-            if(o1.getId() != localId && o2.getId()!= localId  & o1.getId() != o2.getId()) {
-                Iterator othersiteOperations = o2.getOtherSitesOperations();
-                while ( othersiteOperations.hasNext()) {
-                    Operation otherSiteOperation = (Operation) othersiteOperations.next();
-                    if(otherSiteOperation.getId() == o1.getId() && otherSiteOperation.getTimeStamp() == o1.getTimeStamp()){
-                        o2.removeOtherSiteOperation(o1);
-                        return -1;
-                    }
-                }
-                return 1;
-            }
-
-            return 1;
-
-        }
-    }
-    */
 
 
 }

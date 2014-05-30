@@ -74,14 +74,10 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
             }
             else{
-//                log.info(opBuffer.getObj().getObj() + "from " + opBuffer.getId() + " is dependent " +
-//                        operation.getObj().getObj() + "from " + opBuffer.getId());
                 result = operation;
             }
 
 		}
-//        if(operationBuffer.isEmpty())
-//            log.info("not operation in history buffer. Adding " + operation.getObj().getObj() );
         //historyBuffer.add(operation);
 		return result;
 	}
@@ -130,7 +126,6 @@ public class GOTOAlgorithm extends AlgorithmControl{
             for(int idx= i ; idx< operationBuffer.size() ; idx++ ) {
                 tailOperations.add(operationBuffer.get(idx));
             }
-//            tailOperations.addAll(i, operationBuffer);
         }
         return tailOperations;
     }
@@ -138,12 +133,12 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     public List<Operation> lTranspose(Operation op1, Operation op2) {
         List<Operation> tranformedOperations = new ArrayList<Operation>();
-//        op1.print("before transpose1 ");
-//        op2.print("before transpose2 ");
+        //op1.print("before transpose1 ");
+        //op2.print("before transpose2 ");
         Operation op2Prime = et.transform(op2, op1);
         Operation op1Prime = it.transform(op1, op2Prime);
-//        op1Prime.print("after transpose1 ");
-//        op2Prime.print("after transpose2 ");
+        //op1Prime.print("after transpose1 ");
+        //op2Prime.print("after transpose2 ");
         tranformedOperations.add(op2Prime);
         tranformedOperations.add(op1Prime);
         return tranformedOperations;

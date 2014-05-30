@@ -108,20 +108,12 @@ public class ConcurrencyControl {
         return this.buffer.getBuffer().size() + 1;
     }
 
-    public Operation getLastOperation(){
-        return buffer.getBuffer().get(buffer.getBuffer().size()-1);
-    }
-
     public void setOtherSitesOperations(Operation operation){
         for (Operation op : this.buffer.getBuffer()){
             if (op.getId() != operation.getId()){
                 operation.setOtherSitesOperations(op);
             }
         }
-    }
-
-    public int getBufferLength(){
-        return buffer.getBuffer().size();
     }
 
 }
