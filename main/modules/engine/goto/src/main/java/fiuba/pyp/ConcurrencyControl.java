@@ -82,7 +82,6 @@ public class ConcurrencyControl {
                 doc.addObject(obj, position, id);
             }
             else if (transOp.isDelete()){
-                transOp.print("A VER ");
                 doc.removeObject(obj, position, id);
             }
         }

@@ -57,13 +57,11 @@ public class RemoteOperationHandler{
                 }
             }
         }
-
         System.out.println("Finished creating new node: " + node);
 
         app.subscribe();
         operationManager = new OperationManager(getId());
         addRemoteOperationListener();
-        //app.startPublishTask();
     }
 
     public Id getId() {
@@ -99,7 +97,6 @@ public class RemoteOperationHandler{
                 Operation nextOp = getNextNetworkOperation();
                 operationManager.addOperation(nextOp);
                 operationManager.printQueue();
-
             }
         };
         this.app.addRemoteOperationListener(arrivalEvent);

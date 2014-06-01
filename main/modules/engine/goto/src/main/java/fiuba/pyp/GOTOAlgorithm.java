@@ -31,7 +31,7 @@ public class GOTOAlgorithm extends AlgorithmControl{
 	 */
 	@Override
 	public Operation run(Operation operation, HistoryBuffer historyBuffer) {
-
+        //Algoritmo GOTO ver Documentacion Adjunta
         int timestamp = 0;
         Logger log = Logger.getLogger(App.class);
         ArrayList<Operation> operationBuffer = historyBuffer.getBuffer();
@@ -68,7 +68,6 @@ public class GOTOAlgorithm extends AlgorithmControl{
                         return it.transform(operation, tailOperations);
                     }*/
                 }
-//                log.info("independent operation. Adding " + operation.getObj().getObj() );
                 ArrayList<Operation> tailOperations = getTailOperations(operationBuffer, timestamp-1);
                 return it.transform(operation, tailOperations);
 
@@ -83,9 +82,7 @@ public class GOTOAlgorithm extends AlgorithmControl{
 	}
 
     private ArrayList<Operation> getTransposeBuffer(ArrayList<Operation> operationBuffer, int i, Integer key) {
-
         return getMiddleOperations(operationBuffer, i, key);
-
     }
 
     private ArrayList<Operation> getMiddleOperations(ArrayList<Operation> operationBuffer, int initialIdx, int finalIdx) {
@@ -133,12 +130,8 @@ public class GOTOAlgorithm extends AlgorithmControl{
 
     public List<Operation> lTranspose(Operation op1, Operation op2) {
         List<Operation> tranformedOperations = new ArrayList<Operation>();
-        //op1.print("before transpose1 ");
-        //op2.print("before transpose2 ");
         Operation op2Prime = et.transform(op2, op1);
         Operation op1Prime = it.transform(op1, op2Prime);
-        //op1Prime.print("after transpose1 ");
-        //op2Prime.print("after transpose2 ");
         tranformedOperations.add(op2Prime);
         tranformedOperations.add(op1Prime);
         return tranformedOperations;
@@ -156,8 +149,6 @@ public class GOTOAlgorithm extends AlgorithmControl{
             operationsTrans.set(posj, twoOperations.get(1));
             posj--;
         }
-
-
     }
 
 }

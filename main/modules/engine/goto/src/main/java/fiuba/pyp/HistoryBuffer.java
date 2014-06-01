@@ -52,7 +52,4 @@ public class HistoryBuffer implements Serializable {
 		buffer.remove(op);
 	}
 
-    public int getBufferSize() {
-        return buffer.size();
-    }
 }

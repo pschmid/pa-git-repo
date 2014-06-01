@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 /**
  * Created by pyp on 27/03/14.
+ *
+ * This Class will Handle the Transformation between
+ * Application Operations and Engine Operations
+ *
  */
 public class AdaptedOperation implements Serializable{
 
@@ -22,7 +26,6 @@ public class AdaptedOperation implements Serializable{
     }
 
     public Operation transformToPrimitiveOperation(){
-//        return getAddressDomain().getPrimitiveOperation(this.operation);
         return this.operation;
     }
 

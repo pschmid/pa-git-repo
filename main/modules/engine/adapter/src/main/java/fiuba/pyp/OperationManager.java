@@ -30,6 +30,7 @@ public class OperationManager {
         }
     }
 
+    //Devuelve copia del HashMap
     public HashMap<Id, Integer> cloneHashMap(){
         HashMap<Id, Integer> auxMap = new HashMap<Id, Integer>();
         for(Id key:stateVector.keySet()){
@@ -38,6 +39,7 @@ public class OperationManager {
         return auxMap;
     }
 
+    //Devuelve la proxima Operacion Remota que se Encuentre Causally Ready (es decir que pueda ejecutarse)
     @Nullable
     public Operation getNextOperation() {
         Operation res = null;
@@ -59,6 +61,7 @@ public class OperationManager {
         return res;
     }
 
+    //Busca que no falte ninguna otra operacion remota de otro sitio para que no haya conflictos
     private boolean compareStateVectors(Operation operationCompare){
         for(Id key:operationCompare.getStateVector().keySet()){
             //Primera condicion  ya verifica que sea la siguiente

@@ -13,7 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Archivitos;
-import fiuba.pyp.*;
+import fiuba.pyp.AdaptedOperationManeger;
+import fiuba.pyp.Operation;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
@@ -24,26 +25,28 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     public AdaptedOperationManeger adaptedOperationManeger;
     private int lastDeleteCaretPosition;
     private String lastText;
+    private int portNumber=9001;
 
     public Principal() {
         initComponents();
-        setTitle("Sin Titulo_" + numHoja);
+        setTitle("EDITOR_" + Integer.toString(portNumber));
         txtNumLineas.append(numLin + "\n");
         areaTexto.setComponentPopupMenu(jPopupMenu1);
         poneAcciones();
-        lastDeleteCaretPosition = 0; lastText = "";
         start();
 
     }
-//Este método sirve para agregar las acciones a cada componente
 
+    //Este método sirve para agregar las acciones a cada componente
     private void poneAcciones() {
          areaTexto.addKeyListener(new KeyAdapter() {
 
             public void keyReleased(KeyEvent evt) {
+            }
+            //Debe caputarse los eventos al presionar una tecla
+            public void keyPressed(KeyEvent evt) {
                 presionaTecla(evt);
             }
-
             public void keyTyped(KeyEvent evt) {
             }
         });
@@ -69,6 +72,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lastDeleteCaretPosition = 0; lastText = "";
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jpmiCopiar = new javax.swing.JMenuItem();
         jpmiCortar = new javax.swing.JMenuItem();
@@ -233,7 +237,8 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-867)/2, (screenSize.height-558)/2, 867, 558);
     }// </editor-fold>//GEN-END:initComponents
-//Para poner ajuste de linea
+
+    //Para poner ajuste de linea
     private void chbxAjusteLineaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chbxAjusteLineaStateChanged
         if (chbxAjusteLinea.isSelected()) {
             areaTexto.setLineWrap(true);
@@ -241,7 +246,8 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             areaTexto.setLineWrap(false);
         }
     }//GEN-LAST:event_chbxAjusteLineaStateChanged
-//Para mostrar u ocultar numeros de linea
+
+    //Para mostrar u ocultar numeros de linea
     private void chbxNumLineaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chbxNumLineaStateChanged
         if (chbxNumLinea.isSelected()) {
             txtNumLineas.setVisible(true);
@@ -419,8 +425,8 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             new Acerca(this, true).setVisible(true);
         }
     }
-//metodo que permite guardar mostrando el cuadro de guardado
 
+    //Metodo que permite guardar mostrando el cuadro de guardado
     private void guarda() {
         String s = areaTexto.getText();
         try {
@@ -431,8 +437,8 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Error de E/S");
         }
     }
-//este método es para guardar sin que se pida el nombre de archivo
 
+    //Este método es para guardar sin que se pida el nombre de archivo
     private void guardaDos() {
         String s = areaTexto.getText();
         try {
@@ -442,26 +448,28 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Error de E/S");
         }
     }
-//Este método sirve principalmente para ir añadiendo numeros de linea, 
 
+    //Este metodo sirve principalmente para ir añadiendo numeros de linea.
+    //Captura a su vez los eventos de teclado que interesean (letras, digitos o simbolos)
     public void presionaTecla(KeyEvent evt) {
         String c = Character.toString(evt.getKeyChar());
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             numLin++;
             txtNumLineas.append(numLin + "\n");
-
-        	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() - 1);
+        	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
 
         } else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
-            
-            //Borra reemplazando con nada.
-//          areaTexto.replaceRange("", areaTexto.getCaretPosition()-1, areaTexto.getCaretPosition());
-            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0))
-                if (!(lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE ))
-                    this.sendEventToManager("DELETE", c, areaTexto.getCaretPosition() + 1);
+
+            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0)){
+                if (!(lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
+                    int pos = areaTexto.getCaretPosition();
+                    if (evt.getKeyCode() == KeyEvent.VK_DELETE) pos++;
+                    this.sendEventToManager("DELETE", c, pos );
+                }
+            }
             lastDeleteCaretPosition = areaTexto.getCaretPosition();
         	lastText = areaTexto.getText();
             for (String s : filas) {
@@ -473,13 +481,28 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 txtNumLineas.append(1 + "\n");
                 numLin = 1;
             }
-        }
-        else if (Character.isLetterOrDigit(evt.getKeyCode())) {
-            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition() - 1);
+
+        } else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
+                 || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
+            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition() );
         }
     }
 
-//En este método, cada fila del editor se va guardando en un vector
+    //Determina si se trata de un simbolo
+    private boolean isSymbol(int code){
+        if (code == KeyEvent.VK_SEMICOLON || code == KeyEvent.VK_COMMA || code == KeyEvent.VK_COLON
+            ||  code == KeyEvent.VK_MINUS || code == KeyEvent.VK_PERIOD || code == KeyEvent.VK_SLASH
+            ||  code == KeyEvent.VK_EQUALS || code == KeyEvent.VK_BACK_SLASH || code == KeyEvent.VK_OPEN_BRACKET
+            ||  code == KeyEvent.VK_CLOSE_BRACKET || code == KeyEvent.VK_BRACELEFT || code == KeyEvent.VK_BRACERIGHT
+            ||  code == KeyEvent.VK_ASTERISK || code == KeyEvent.VK_PLUS || code == KeyEvent.VK_LESS
+            ||  code == KeyEvent.VK_GREATER || code == KeyEvent.VK_AT || code == KeyEvent.VK_CIRCUMFLEX
+            ||  code == KeyEvent.VK_INVERTED_EXCLAMATION_MARK || code == KeyEvent.VK_DEAD_ACUTE || code == KeyEvent.VK_DEAD_TILDE
+            )
+            return true;
+        return false;
+    }
+
+    //En este método, cada fila del editor se va guardando en un vector
     public void guardaFilas() {
         filas = new Vector<String>();
         StringTokenizer st = new StringTokenizer(areaTexto.getText(), "\n");
@@ -488,7 +511,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         }
     }
 
-//genera los numeros de linea del editor, se utiliza principalmente para cuando se abre un archivo
+    //genera los numeros de linea del editor, se utiliza principalmente para cuando se abre un archivo
     public void poneNumLineas() {
         for (String s : filas) {
             numLin++;
@@ -496,10 +519,12 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         }
     }
 
+    //Envia el evento a la capa inferior de la arquitectura
     public void sendEventToManager(String type,String character, int position){
         this.adaptedOperationManeger.captureEventFromApp(type, character, position);
     }
 
+    //Este es el hilo que se encarga de buscar las operaciones remotas en la capa inferior de la arquitectura
     public void start(){
         Runnable remoteHandler = new Runnable() {
             @Override
@@ -530,11 +555,13 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         threadR.start();
     }
 
+    //Ejecuta las operaciones remotas que haya encontrado
     public void executeRemoteOperation(Operation operation){
         if (operation.isInsert()){
             areaTexto.insert(operation.getObj().getObj(), operation.getPosition() );
         }
         else{
+            //Borra reemplazando con nada.
             guardaFilas();
             areaTexto.replaceRange("", operation.getPosition()-1, operation.getPosition() );
         }
