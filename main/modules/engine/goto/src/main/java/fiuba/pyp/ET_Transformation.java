@@ -89,6 +89,7 @@ public class ET_Transformation extends Transformation {
 			return op1;
 		}
 		else{
+            System.out.println(op1);
             op1.setIdentity(true);
 			return op1;
 		}

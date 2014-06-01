@@ -47,8 +47,10 @@ public class AdaptedOperationManeger {
         newOp.setStateVector(remoteOperationHandler.getStateVector());
         addressDomain.getConcurrencyControl().setOtherSitesOperations(newOp);
         newOp = addressDomain.getConcurrencyControl().runOperation(newOp);
-        newOp.setStateVector(remoteOperationHandler.getStateVector());
-        remoteOperationHandler.publishOperation(newOp);
+        if (!(newOp.isIdentity())){
+            newOp.setStateVector(remoteOperationHandler.getStateVector());
+            remoteOperationHandler.publishOperation(newOp);
+        }
 
     }
 

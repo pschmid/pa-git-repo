@@ -12,6 +12,8 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+
 import modelo.Archivitos;
 import fiuba.pyp.AdaptedOperationManeger;
 import fiuba.pyp.Operation;
@@ -463,7 +465,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             txtNumLineas.setText("");
             numLin = 1;
 
-            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0)){
+            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0 && areaTexto.getText().equals(""))){
                 if (!(lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
                     int pos = areaTexto.getCaretPosition();
                     if (evt.getKeyCode() == KeyEvent.VK_DELETE) pos++;
@@ -563,7 +565,13 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         else{
             //Borra reemplazando con nada.
             guardaFilas();
-            areaTexto.replaceRange("", operation.getPosition()-1, operation.getPosition() );
+            if (!areaTexto.equals("")){
+                try {
+                    areaTexto.getDocument().remove(operation.getPosition()-1, 1); //.replaceRange("", operation.getPosition()-1, operation.getPosition() );
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
