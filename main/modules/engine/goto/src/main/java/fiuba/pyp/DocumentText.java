@@ -49,7 +49,7 @@ public class DocumentText extends Document{
 	public void removeObject(DocumentObject obj, int position, Id id) {
 		// TODO check if we need to check equalities between obj and obj in doc
         if (obj != null){
-            System.out.println("DOCUMENT ---- " + doc);
+            //System.out.println("DOCUMENT ---- " + doc);
             String end = doc.substring(obj.getLength() + position);
             String result = doc.substring(0, position);
             result = result + end;

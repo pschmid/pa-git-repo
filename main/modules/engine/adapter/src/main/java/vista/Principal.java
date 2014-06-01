@@ -534,7 +534,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                         if (adaptedOperationManeger != null){
                             Operation op = adaptedOperationManeger.sendOperationToApp();
                             if (op != null){
-                                System.out.println(op.toString());
+                                //System.out.println(op.toString());
                                 executeRemoteOperation(op);
                                 }
                             else{

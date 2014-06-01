@@ -79,7 +79,7 @@ public class OperationManager {
 
     public void printQueue() {
         for(Operation op: operationList){
-            System.out.println("operation: "+ op);
+            //System.out.println("operation: "+ op);
         }
     }
 

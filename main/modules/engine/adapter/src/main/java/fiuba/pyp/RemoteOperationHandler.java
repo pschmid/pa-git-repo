@@ -57,7 +57,7 @@ public class RemoteOperationHandler{
                 }
             }
         }
-        System.out.println("Finished creating new node: " + node);
+        //System.out.println("Finished creating new node: " + node);
 
         app.subscribe();
         operationManager = new OperationManager(getId());

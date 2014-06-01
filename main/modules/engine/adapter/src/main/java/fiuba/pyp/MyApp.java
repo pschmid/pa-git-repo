@@ -51,22 +51,22 @@ public class MyApp implements Application {
                 fileTransfer = new FileTransferImpl(socket,new FileTransferCallback() {
 
                     public void messageReceived(ByteBuffer bb) {
-                        System.out.println("Message received: "+bb);
+                        //System.out.println("Message received: "+bb);
                     }
 
                     public void fileReceived(File f, ByteBuffer metadata) {
                         try {
                             String originalFileName = new SimpleInputBuffer(metadata).readUTF();
                             File dest = new File("delme2.txt");
-                            System.out.println("Moving "+f+" to "+dest+" original:"+originalFileName);
-                            System.out.println(f.renameTo(dest));
+                            //System.out.println("Moving "+f+" to "+dest+" original:"+originalFileName);
+                            //System.out.println(f.renameTo(dest));
                         } catch (IOException ioe) {
-                            System.out.println("Error deserializing file name. "+ioe);
+                            //System.out.println("Error deserializing file name. "+ioe);
                         }
                     }
 
                     public void receiveException(Exception ioe) {
-                        System.out.println("FTC.receiveException() "+ioe);
+                        //System.out.println("FTC.receiveException() "+ioe);
                     }
                 },MyApp.this.node.getEnvironment());
 
@@ -112,7 +112,7 @@ public class MyApp implements Application {
                 s = " Uploaded ";
             }
             double percent = 100.0*bytesTransferred/total;
-            System.out.println(MyApp.this+s+percent+"% of "+receipt);
+            //System.out.println(MyApp.this+s+percent+"% of "+receipt);
         }
 
         public void msgTransferred(BBReceipt receipt, int bytesTransferred,
@@ -124,7 +124,7 @@ public class MyApp implements Application {
                 s = " Uploaded ";
             }
             double percent = 100.0*bytesTransferred/total;
-            System.out.println(MyApp.this+s+percent+"% of "+receipt);
+            //System.out.println(MyApp.this+s+percent+"% of "+receipt);
         }
 
         public void transferCancelled(Receipt receipt, boolean incoming) {
@@ -134,7 +134,7 @@ public class MyApp implements Application {
             } else {
                 s = "upload";
             }
-            System.out.println(MyApp.this+": Cancelled "+s+" of "+receipt);
+            //System.out.println(MyApp.this+": Cancelled "+s+" of "+receipt);
         }
 
         public void transferFailed(Receipt receipt, boolean incoming) {
@@ -144,7 +144,7 @@ public class MyApp implements Application {
             } else {
                 s = "upload";
             }
-            System.out.println(MyApp.this+": Transfer Failed "+s+" of "+receipt);
+            //System.out.println(MyApp.this+": Transfer Failed "+s+" of "+receipt);
         }
     }
 
@@ -159,7 +159,7 @@ public class MyApp implements Application {
      * Called to directly send a message to the nh
      */
     public void sendMyMsgDirect(NodeHandle nh) {
-        System.out.println(this+" opening to "+nh);
+        //System.out.println(this+" opening to "+nh);
         endpoint.connect(nh, new AppSocketReceiver() {
 
             /**
@@ -183,7 +183,7 @@ public class MyApp implements Application {
                 sendMe.flip();
 
                 // Send the message
-                System.out.println("Sending "+sendMe);
+                //System.out.println("Sending "+sendMe);
                 sender.sendMsg(sendMe, (byte)1, null);
 
                 try {
@@ -192,7 +192,7 @@ public class MyApp implements Application {
 
                     // make sure it exists
                     if (!f.exists()) {
-                        System.err.println("File "+f+" does not exist.  Please create a file called "+f+" and run the tutorial again.");
+                        //System.err.println("File "+f+" does not exist.  Please create a file called "+f+" and run the tutorial again.");
                         System.exit(1);
                     }
 
@@ -204,11 +204,11 @@ public class MyApp implements Application {
                     sender.sendFile(f,sob.getByteBuffer(),(byte)2,new Continuation<FileReceipt, Exception>() {
 
                         public void receiveException(Exception exception) {
-                            System.out.println("Error sending: "+f+" "+exception);
+                            //System.out.println("Error sending: "+f+" "+exception);
                         }
 
                         public void receiveResult(FileReceipt result) {
-                            System.out.println("Send complete: "+result);
+                            //System.out.println("Send complete: "+result);
                         }
                     });
 
@@ -237,7 +237,7 @@ public class MyApp implements Application {
      * Called when we receive a message.
      */
     public void deliver(Id id, Message message) {
-        System.out.println(this+" received "+message);
+        //System.out.println(this+" received "+message);
     }
 
     /**

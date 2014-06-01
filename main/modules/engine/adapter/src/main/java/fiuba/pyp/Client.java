@@ -66,7 +66,7 @@ public class Client implements ScribeClient, Application {
 
         // construct the topic
         this.myTopic = new Topic(new PastryIdFactory(node.getEnvironment()), TOPIC_NAME);
-        System.out.println("myTopic = "+myTopic);
+        //System.out.println("myTopic = "+myTopic);
 
         // now we can receive messages
         endpoint.register();
@@ -108,7 +108,7 @@ public class Client implements ScribeClient, Application {
     public void sendMulticast(Operation operation) {
 
         NetworkObject myMessage = new NetworkObject(operation,endpoint.getLocalNodeHandle(), seqNum);
-        System.out.println("Node "+endpoint.getLocalNodeHandle()+" broadcasting "+seqNum + "mensaje"+ myMessage);
+        //System.out.println("Node "+endpoint.getLocalNodeHandle()+" broadcasting "+seqNum + "mensaje"+ myMessage);
         myScribe.publish(myTopic, myMessage);
         seqNum++;
     }
@@ -120,7 +120,7 @@ public class Client implements ScribeClient, Application {
         if (((NetworkObject)content).from == null) {
           new Exception("Stack Trace").printStackTrace();
         }else if(((NetworkObject)content).from != endpoint.getLocalNodeHandle()){
-            System.out.println("MyScribeClient.deliver("+topic+","+content+")");
+            //System.out.println("MyScribeClient.deliver("+topic+","+content+")");
             remoteOperations.addLast((NetworkObject)content);
             fireRemoteOperation(new Event(null, 0, null));
         }
@@ -133,7 +133,7 @@ public class Client implements ScribeClient, Application {
      */
     public boolean anycast(Topic topic, ScribeContent content) {
         boolean returnValue = myScribe.getEnvironment().getRandomSource().nextInt(3) == 0;
-        System.out.println("MyScribeClient.anycast("+topic+","+content+"):"+returnValue);
+        //System.out.println("MyScribeClient.anycast("+topic+","+content+"):"+returnValue);
         return returnValue;
     }
 
