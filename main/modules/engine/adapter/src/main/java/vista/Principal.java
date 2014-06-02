@@ -28,6 +28,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     private int lastDeleteCaretPosition;
     private String lastText;
     private int portNumber=9001;
+    private int lastLocalPosition;
 
     public Principal() {
         initComponents();
@@ -75,7 +76,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lastDeleteCaretPosition = 0; lastText = "";
+        lastDeleteCaretPosition = 0; lastLocalPosition = 0;lastText = "";
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jpmiCopiar = new javax.swing.JMenuItem();
         jpmiCortar = new javax.swing.JMenuItem();
@@ -461,24 +462,45 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             txtNumLineas.append(numLin + "\n");
         	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
 
-        } else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
+        }else if (evt.getKeyCode() == KeyEvent.VK_DELETE){
+            guardaFilas();
+            txtNumLineas.setText("");
+            numLin = 1;
+
+            if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
+                int pos = areaTexto.getCaretPosition()+1;
+                if (evt.getKeyCode() == KeyEvent.VK_DELETE)
+                    this.sendEventToManager("DELETE", c, pos );
+            }
+            lastDeleteCaretPosition = areaTexto.getCaretPosition();
+            lastText = areaTexto.getText();
+            for (String s : filas) {
+                txtNumLineas.append(numLin + "\n");
+                numLin++;
+            }
+            numLin--;
+            if (areaTexto.getText().equals("")) {
+                txtNumLineas.append(1 + "\n");
+                numLin = 1;
+            }
+        }else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
                  || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
             this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition());
         }
     }
      private void presionaBorrado(KeyEvent evt){
          String c = Character.toString(evt.getKeyChar());
-         if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
+         if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
 
             if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0)){
-                if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && evt.getKeyCode() == KeyEvent.VK_DELETE )){
+//                if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
                     int pos = areaTexto.getCaretPosition()+1;
                     if (evt.getKeyCode() == KeyEvent.VK_DELETE)
                     this.sendEventToManager("DELETE", c, pos );
-                }
+//                }
             }
             lastDeleteCaretPosition = areaTexto.getCaretPosition();
             lastText = areaTexto.getText();
@@ -527,6 +549,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
     //Envia el evento a la capa inferior de la arquitectura
     public void sendEventToManager(String type,String character, int position){
+        lastLocalPosition = areaTexto.getCaretPosition();
         this.adaptedOperationManeger.captureEventFromApp(type, character, position);
     }
 
@@ -563,6 +586,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
     //Ejecuta las operaciones remotas que haya encontrado
     public void executeRemoteOperation(Operation operation){
+        areaTexto.setCaretPosition(lastLocalPosition);
         if (operation.isInsert()){
             areaTexto.insert(operation.getObj().getObj(), operation.getPosition() );
         }

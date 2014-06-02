@@ -64,8 +64,6 @@ public class ConcurrencyControl {
 	}
 
     public synchronized Operation runOperation(Operation operation){
-        if (this.buffer.getBuffer().size() == 10)
-            this.clearHistoryBuffer();
         Operation transOp = algorithm.run(operation,this.buffer);
         this.buffer.add(transOp);
         return transOp;
