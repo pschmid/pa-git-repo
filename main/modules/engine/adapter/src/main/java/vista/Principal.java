@@ -300,6 +300,12 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
                 // the Ip and port to use locally
                 try {
+                    if (args.length != 4){
+                        System.out.println("Usage:");
+                        System.out.println("localIp localbindport bootIP bootPort");
+                        System.out.println("example 192.168.56.101 9001 192.168.56.1 9001");
+                        return;
+                    }
                     InetAddress localIpAddr = InetAddress.getByName(args[0]);
                     int bindport = Integer.parseInt(args[1]);
                     InetSocketAddress localIP = new InetSocketAddress(localIpAddr, bindport);
@@ -586,7 +592,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
     //Ejecuta las operaciones remotas que haya encontrado
     public void executeRemoteOperation(Operation operation){
-        areaTexto.setCaretPosition(lastLocalPosition);
+//        areaTexto.setCaretPosition(lastLocalPosition);
         if (operation.isInsert()){
             areaTexto.insert(operation.getObj().getObj(), operation.getPosition() );
         }
