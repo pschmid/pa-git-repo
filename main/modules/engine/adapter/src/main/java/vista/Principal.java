@@ -44,6 +44,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
          areaTexto.addKeyListener(new KeyAdapter() {
 
             public void keyReleased(KeyEvent evt) {
+                presionaBorrado(evt);
             }
             //Debe caputarse los eventos al presionar una tecla
             public void keyPressed(KeyEvent evt) {
@@ -460,20 +461,27 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             txtNumLineas.append(numLin + "\n");
         	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
 
-        } else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
+        } else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
+                 || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
+            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition());
+        }
+    }
+     private void presionaBorrado(KeyEvent evt){
+         String c = Character.toString(evt.getKeyChar());
+         if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
 
-            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0 && areaTexto.getText().equals(""))){
-                if (!(lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
-                    int pos = areaTexto.getCaretPosition();
-                    if (evt.getKeyCode() == KeyEvent.VK_DELETE) pos++;
+            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0)){
+                if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && evt.getKeyCode() == KeyEvent.VK_DELETE )){
+                    int pos = areaTexto.getCaretPosition()+1;
+                    if (evt.getKeyCode() == KeyEvent.VK_DELETE)
                     this.sendEventToManager("DELETE", c, pos );
                 }
             }
             lastDeleteCaretPosition = areaTexto.getCaretPosition();
-        	lastText = areaTexto.getText();
+            lastText = areaTexto.getText();
             for (String s : filas) {
                 txtNumLineas.append(numLin + "\n");
                 numLin++;
@@ -483,10 +491,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 txtNumLineas.append(1 + "\n");
                 numLin = 1;
             }
-
-        } else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
-                 || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
-            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition() );
         }
     }
 
