@@ -45,7 +45,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
          areaTexto.addKeyListener(new KeyAdapter() {
 
             public void keyReleased(KeyEvent evt) {
-                presionaBorrado(evt);
             }
             //Debe caputarse los eventos al presionar una tecla
             public void keyPressed(KeyEvent evt) {
@@ -466,17 +465,22 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             numLin++;
             txtNumLineas.append(numLin + "\n");
-        	this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
-
-        }else if (evt.getKeyCode() == KeyEvent.VK_DELETE){
+            this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
+        }
+        else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
+                || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
+            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition());
+        }
+        else if (evt.getKeyCode() == KeyEvent.VK_DELETE){
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
 
-            if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
-                int pos = areaTexto.getCaretPosition()+1;
-                if (evt.getKeyCode() == KeyEvent.VK_DELETE)
+            if (!(lastText.equals("") && areaTexto.getText().equals("") )){
+                if (areaTexto.getText().length() != areaTexto.getCaretPosition()){
+                    int pos = areaTexto.getCaretPosition()+1;
                     this.sendEventToManager("DELETE", c, pos );
+                }
             }
             lastDeleteCaretPosition = areaTexto.getCaretPosition();
             lastText = areaTexto.getText();
@@ -489,24 +493,15 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 txtNumLineas.append(1 + "\n");
                 numLin = 1;
             }
-        }else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
-                 || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
-            this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition());
         }
-    }
-     private void presionaBorrado(KeyEvent evt){
-         String c = Character.toString(evt.getKeyChar());
-         if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             guardaFilas();
             txtNumLineas.setText("");
             numLin = 1;
 
-            if (!(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE && lastDeleteCaretPosition == 0 && areaTexto.getCaretPosition() == 0)){
-//                if (!(areaTexto.getText().length() == areaTexto.getCaretPosition() && lastText.equals("") && areaTexto.getText().equals("") && evt.getKeyCode() == KeyEvent.VK_DELETE )){
-                    int pos = areaTexto.getCaretPosition()+1;
-                    if (evt.getKeyCode() == KeyEvent.VK_DELETE)
-                    this.sendEventToManager("DELETE", c, pos );
-//                }
+            if (areaTexto.getCaretPosition() != 0){
+                int pos = areaTexto.getCaretPosition();
+                this.sendEventToManager("DELETE", c, pos );
             }
             lastDeleteCaretPosition = areaTexto.getCaretPosition();
             lastText = areaTexto.getText();
@@ -592,22 +587,35 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
     //Ejecuta las operaciones remotas que haya encontrado
     public void executeRemoteOperation(Operation operation){
-//        areaTexto.setCaretPosition(lastLocalPosition);
+        int pos = areaTexto.getCaretPosition();
         if (operation.isInsert()){
-            areaTexto.insert(operation.getObj().getObj(), operation.getPosition() );
+            areaTexto.insert(operation.getObj().getObj(), operation.getPosition());
         }
         else{
             //Borra reemplazando con nada.
             guardaFilas();
             if (!areaTexto.equals("")){
                 try {
-                    areaTexto.getDocument().remove(operation.getPosition()-1, 1); //.replaceRange("", operation.getPosition()-1, operation.getPosition() );
+                    areaTexto.getDocument().remove(operation.getPosition() - 1, 1); //.replaceRange("", operation.getPosition()-1, operation.getPosition() );
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
             }
         }
+        correctCaretPosition(operation, pos);
 
+    }
+
+    //Corrige la posicion del cursor segun la operacion y la posicion antes de ejecutarla
+    private void correctCaretPosition(Operation operation, int pos){
+        if (operation.isInsert() && operation.getPosition() < pos && pos != 0){
+            pos++;
+            areaTexto.setCaretPosition(pos);
+        }
+        else if(operation.isDelete() && operation.getPosition() <= pos && pos != 0 && areaTexto.getCaretPosition() != areaTexto.getText().length()){
+            pos--;
+            areaTexto.setCaretPosition(pos);
+        }
     }
 
 }
