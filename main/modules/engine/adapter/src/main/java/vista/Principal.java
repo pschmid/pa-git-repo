@@ -616,6 +616,11 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             pos--;
             areaTexto.setCaretPosition(pos);
         }
+        //Caso especial ya que al quedar al final el cursor no se mueve por conincidir con la longitud
+        else if(operation.isDelete() && operation.getPosition() == 1 && pos == 1 && areaTexto.getText().length() == 1){
+            pos--;
+            areaTexto.setCaretPosition(pos);
+        }
     }
 
 }
