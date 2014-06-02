@@ -25,10 +25,16 @@ public class AdaptedOperationManeger {
     RemoteOperationHandler remoteOperationHandler;
     AddressDomain addressDomain;
     int localCounter=1;
+    //Este contador hace que cuando hay inactividad en la red por cierto tiempo se limpie el history buffer.
+    //Cuando esta en 0 no empieza a contar todavia hasta que se capture un evento de la App o se reciba por la red (sincronia)
+    //Si ya habia comenzado a contar y se recibe algo nuevamente vuelve a comenzar desde 1 (evita conflictos)
+    //Al llegar a 1000 limpia el buffer en cada nodo de la red ya que estan sincronizados.
+    //Despues de limpiar el buffer vuelve a 0 y no vuelve a empezar hasta que reciba algo de la App o la red, y asi sucesivamente
+    private static int timeCount = 0;
 
     //Constructor que inicializa los parametros de Red, los handlers y la comunicacion con la capa inferior
     public AdaptedOperationManeger(InetSocketAddress localIP, InetSocketAddress bootaddress) {
-        this.localCounter = 1;
+        this.localCounter = 1; initializeCount();
         this.localOperationHandler = new LocalOperationHandler();
         this.addressDomain = AddressDomain.getInstance();
         startRemoteHandler(localIP,bootaddress);
@@ -51,10 +57,13 @@ public class AdaptedOperationManeger {
             newOp.setStateVector(remoteOperationHandler.getStateVector());
             remoteOperationHandler.publishOperation(newOp);
         }
-
+        initializeCount(); incrementCount();
     }
 
-    //Envia una operacion a la capa superior de la arquitectura
+    public static synchronized void incrementCount() { timeCount++; }
+    public static synchronized void initializeCount() { timeCount=0; }
+
+        //Envia una operacion a la capa superior de la arquitectura
     @Nullable
     public Operation sendOperationToApp(){
         if (localOperationHandler.getOperationEvents().isEmpty()){
@@ -96,9 +105,20 @@ public class AdaptedOperationManeger {
                         Operation op = remoteOperationHandler.getNextRemoteOperation();
                         if (op != null){
                             localOperationHandler.addOperationEvent(addressDomain.getConcurrencyControl().runOperation(op));
+                            initializeCount(); incrementCount();
                         }
                         else{
-                            sleep(5);
+                            sleep(4); //Con esto simulamos el tiempo de sincronia
+                            if (timeCount > 0 && timeCount < 1000){
+                                incrementCount();
+                            }
+                            else if (timeCount >= 1000){
+                                //No hay conflictos porque si justo mientras se borra el buffer llega una operacion remota
+                                //queda esperando en la red y al salir de este else luego lo captura
+                                addressDomain.getConcurrencyControl().clearHistoryBuffer();
+                                //System.out.println(timeCount);
+                                initializeCount();
+                            }
                         }
                     }
                 } catch (Exception e) {
