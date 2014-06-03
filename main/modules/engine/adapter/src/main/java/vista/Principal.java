@@ -25,10 +25,8 @@ import static java.lang.Thread.sleep;
 public class Principal extends javax.swing.JFrame implements ActionListener {
 
     public AdaptedOperationManeger adaptedOperationManeger;
-    private int lastDeleteCaretPosition;
     private String lastText;
     private int portNumber=9001;
-    private int lastLocalPosition;
 
     public Principal() {
         initComponents();
@@ -75,7 +73,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lastDeleteCaretPosition = 0; lastLocalPosition = 0;lastText = "";
+        lastText = "";
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jpmiCopiar = new javax.swing.JMenuItem();
         jpmiCortar = new javax.swing.JMenuItem();
@@ -482,7 +480,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                     this.sendEventToManager("DELETE", c, pos );
                 }
             }
-            lastDeleteCaretPosition = areaTexto.getCaretPosition();
             lastText = areaTexto.getText();
             for (String s : filas) {
                 txtNumLineas.append(numLin + "\n");
@@ -503,7 +500,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 int pos = areaTexto.getCaretPosition();
                 this.sendEventToManager("DELETE", c, pos );
             }
-            lastDeleteCaretPosition = areaTexto.getCaretPosition();
             lastText = areaTexto.getText();
             for (String s : filas) {
                 txtNumLineas.append(numLin + "\n");
@@ -550,7 +546,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
 
     //Envia el evento a la capa inferior de la arquitectura
     public void sendEventToManager(String type,String character, int position){
-        lastLocalPosition = areaTexto.getCaretPosition();
         this.adaptedOperationManeger.captureEventFromApp(type, character, position);
     }
 
@@ -564,7 +559,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                         if (adaptedOperationManeger != null){
                             Operation op = adaptedOperationManeger.sendOperationToApp();
                             if (op != null){
-                                //System.out.println(op.toString());
                                 executeRemoteOperation(op);
                                 }
                             else{
@@ -592,11 +586,10 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             areaTexto.insert(operation.getObj().getObj(), operation.getPosition());
         }
         else{
-            //Borra reemplazando con nada.
             guardaFilas();
             if (!areaTexto.equals("")){
                 try {
-                    areaTexto.getDocument().remove(operation.getPosition() - 1, 1); //.replaceRange("", operation.getPosition()-1, operation.getPosition() );
+                    areaTexto.getDocument().remove(operation.getPosition() - 1, 1);
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
