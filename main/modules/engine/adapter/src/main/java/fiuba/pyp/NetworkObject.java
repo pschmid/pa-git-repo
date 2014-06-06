@@ -1,6 +1,5 @@
 package fiuba.pyp;
 
-import com.sun.accessibility.internal.resources.accessibility_ko;
 import rice.p2p.commonapi.NodeHandle;
 import rice.p2p.scribe.ScribeContent;
 
@@ -21,17 +20,11 @@ public class NetworkObject implements ScribeContent {
      */
     int seq;
 
-    //private int id;
-    //private int ack;
 
     public NetworkObject(Operation operation, NodeHandle from,int seq) {
         this.operation = operation;
         this.from = from;
         this.seq = seq;
-
-        //this.id = id;
-        //this.ack = 0;
-
     }
 
     public Operation getOperation() {

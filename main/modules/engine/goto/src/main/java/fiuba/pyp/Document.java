@@ -17,12 +17,12 @@ public abstract class Document {
 	/**
 	 * Adds a Document Object into the position of the Document by id
 	 */
-	public abstract void addObject(DocumentObject obj, int position, Id id);
+	public abstract void addObject(DocumentObject obj, int position);
 	
 	/**
 	 * Removes a Document Object into the position of the Document by id
 	 */
-	public abstract void removeObject(DocumentObject obj, int position, Id id);
+	public abstract void removeObject(DocumentObject obj, int position);
 
 
     public abstract void setDoc(String doc);

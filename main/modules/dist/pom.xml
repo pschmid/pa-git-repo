@@ -25,7 +25,40 @@
             <artifactId>engine.goto</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>fiuba.pyp</groupId>
+            <artifactId>engine.adapter</artifactId>
+            <version>1.0</version>
+        </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <!-- to bundle all classes of dependent JAR files -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>vista.Principal</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- . . . -->
+        </plugins>
+    </build>
 
 </project>

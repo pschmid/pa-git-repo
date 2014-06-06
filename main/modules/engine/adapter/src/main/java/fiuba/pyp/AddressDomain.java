@@ -5,7 +5,7 @@ import java.util.TreeSet;
 /**
  * Created by pyp on 20/03/14.
  *
- * Esta Clase implementa el modelo XOTDM que extiende el modelo linear de direccionameinto
+ * Esta Clase implementa el fiuba.pyp.modelo XOTDM que extiende el fiuba.pyp.modelo lineal de direccionamiento
  * de datos a una jerarquia de dominios, un arbol
  *
  */

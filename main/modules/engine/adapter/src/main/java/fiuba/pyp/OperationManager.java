@@ -1,7 +1,5 @@
 package fiuba.pyp;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import rice.p2p.commonapi.Id;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,7 +21,7 @@ public class OperationManager {
         this.stateVector = new HashMap<Id, Integer>();
         this.localId = localId;
     }
-    public void addOperation(@NotNull Operation op) {
+    public void addOperation(Operation op) {
         operationList.add(op);
         if (! stateVector.containsKey(op.getId())){
             stateVector.put(op.getId(), 1);
@@ -40,7 +38,6 @@ public class OperationManager {
     }
 
     //Devuelve la proxima Operacion Remota que se Encuentre Causally Ready (es decir que pueda ejecutarse)
-    @Nullable
     public Operation getNextOperation() {
         Operation res = null;
         for(Operation op: operationList){

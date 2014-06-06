@@ -1,18 +1,8 @@
 package fiuba.pyp;
-
-import com.sun.istack.internal.Nullable;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import rice.environment.Environment;
 import rice.p2p.commonapi.Id;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -37,10 +27,18 @@ public class AdaptedOperationManeger {
         this.localCounter = 1; initializeCount();
         this.localOperationHandler = new LocalOperationHandler();
         this.addressDomain = AddressDomain.getInstance();
-        startRemoteHandler(localIP,bootaddress);
+        try {
+            startRemoteHandler(localIP,bootaddress);
+        } catch (Exception e) {
+            Logger.getLogger(App.class);
+            return;
+        }
         ConcurrencyControl concurrencyControl = addressDomain.getConcurrencyControl();
         concurrencyControl.clearHistoryBuffer();
-        concurrencyControl.setDoc(new DocumentText());
+
+
+        //TODO this might be setted by application
+        //concurrencyControl.setDoc(new DocumentText());
 
     }
 
@@ -64,7 +62,6 @@ public class AdaptedOperationManeger {
     public static synchronized void initializeCount() { timeCount=0; }
 
         //Envia una operacion a la capa superior de la arquitectura
-    @Nullable
     public Operation sendOperationToApp(){
         if (localOperationHandler.getOperationEvents().isEmpty()){
             return null;
@@ -77,21 +74,12 @@ public class AdaptedOperationManeger {
     }
 
     //Inicializa el Handler para operaciones remotas
-    private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) {
-        try {
+    private void startRemoteHandler(InetSocketAddress localIp, InetSocketAddress bootaddress) throws Exception {
 
-            remoteOperationHandler = new RemoteOperationHandler(localIp,bootaddress);
+        remoteOperationHandler = new RemoteOperationHandler(localIp,bootaddress);
 
-        } catch (Exception e) {
-            // remind user how to use
-            System.out.println("Usage:");
-            System.out
-                    .println("localIp localbindport bootIP bootPort");
-            System.out
-                    .println("example 192.168.56.101 9001 192.168.56.1 9001");
-
-        }
         start();
+
     }
 
     //Este Hilo se ocupara de obtener las Operaciones Remotas de la Red

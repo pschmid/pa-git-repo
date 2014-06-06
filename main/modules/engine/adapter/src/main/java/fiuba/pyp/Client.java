@@ -1,6 +1,5 @@
 package fiuba.pyp;
 
-import com.sun.istack.internal.Nullable;
 import rice.p2p.commonapi.*;
 import rice.p2p.scribe.*;
 import rice.pastry.commonapi.PastryIdFactory;
@@ -86,7 +85,6 @@ public class Client implements ScribeClient, Application {
         publishTask = endpoint.scheduleMessage(new PublishContent(), 5000, 5000);
     }
 
-    @Nullable
     public NetworkObject getNextRemoteOperation() {
         return remoteOperations.pollFirst();
     }

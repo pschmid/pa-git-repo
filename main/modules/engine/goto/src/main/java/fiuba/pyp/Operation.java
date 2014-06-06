@@ -3,10 +3,8 @@
  */
 package fiuba.pyp;
 
-import fiuba.pyp.Document;
-import org.apache.log4j.Logger;
-import rice.pastry.Id;
 
+import org.apache.log4j.Logger;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;

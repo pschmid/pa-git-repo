@@ -1,7 +1,7 @@
 package fiuba.pyp;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+
+
 import rice.environment.Environment;
 import rice.p2p.commonapi.Id;
 import rice.pastry.NodeIdFactory;
@@ -57,8 +57,6 @@ public class RemoteOperationHandler{
                 }
             }
         }
-        //System.out.println("Finished creating new node: " + node);
-
         app.subscribe();
         operationManager = new OperationManager(getId());
         addRemoteOperationListener();
@@ -68,7 +66,6 @@ public class RemoteOperationHandler{
         return app.endpoint.getLocalNodeHandle().getId();
     }
 
-    @Nullable
     private Operation getNextNetworkOperation() {
         NetworkObject networkObject = app.getNextRemoteOperation();
         if (networkObject != null)
@@ -76,7 +73,6 @@ public class RemoteOperationHandler{
         else return null;
     }
     //get next executable operation
-    @Nullable
     public synchronized Operation getNextRemoteOperation(){
         return  operationManager.getNextOperation();
     }
@@ -85,7 +81,7 @@ public class RemoteOperationHandler{
         return operationManager.cloneHashMap();
     }
 
-    public void publishOperation(@NotNull Operation operation){
+    public void publishOperation(Operation operation){
         app.sendMulticast(operation);
     }
 

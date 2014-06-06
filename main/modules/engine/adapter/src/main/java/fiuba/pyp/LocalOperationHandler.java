@@ -1,7 +1,5 @@
 package fiuba.pyp;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,6 @@ public class LocalOperationHandler {
         return adaptedOperation.transformToPrimitiveOperation();
     }
 
-    @Nullable
     public synchronized AdaptedOperation getNextAdaptedOperation() {
 
         if (adaptedOperations.isEmpty()){
@@ -52,7 +49,6 @@ public class LocalOperationHandler {
 
     }
 
-    @Nullable
     public synchronized AdaptedOperation transformToAdaptedOperation(Operation operation){
         return null;
     }

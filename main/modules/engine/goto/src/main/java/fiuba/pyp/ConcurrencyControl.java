@@ -58,9 +58,10 @@ public class ConcurrencyControl {
 		this.doc = doc;
 	}
 
-	public synchronized void run(Operation operation){
-		Operation transOp = algorithm.run(operation,this.buffer);
-		execute(transOp);
+	public synchronized Operation run(Operation operation){
+		return algorithm.run(operation,this.buffer);
+
+		//execute(transOp);
 	}
 
     public synchronized Operation runOperation(Operation operation){
@@ -69,6 +70,7 @@ public class ConcurrencyControl {
         return transOp;
     }
 
+    /*
     private synchronized void execute(Operation transOp){
         DocumentObject obj = transOp.getObj();
         int position = transOp.getPosition();
@@ -79,13 +81,13 @@ public class ConcurrencyControl {
 
         if (!transOp.isIdentity()){
             if(transOp.isInsert()){
-                doc.addObject(obj, position, id);
+                doc.addObject(obj, position);
             }
             else if (transOp.isDelete()){
-                doc.removeObject(obj, position, id);
+                doc.removeObject(obj, position);
             }
         }
-    }
+    }*/
 
     public void printHistoryBuffer(){
         Logger log = Logger.getLogger(App.class);
