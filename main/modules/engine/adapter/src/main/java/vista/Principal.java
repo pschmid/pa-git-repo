@@ -461,19 +461,14 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
     public void presionaTecla(KeyEvent evt) {
         String c = Character.toString(evt.getKeyChar());
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            numLin++;
-            txtNumLineas.append(numLin + "\n");
-            this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition() );
+            this.sendEventToManager("INSERT", "\n", areaTexto.getCaretPosition());
         }
         else if (Character.isLetterOrDigit(evt.getKeyCode()) || Character.isSpaceChar(evt.getKeyCode()) || isSymbol(evt.getKeyCode())
-                || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
+                || evt.getKeyChar() == '\t' || evt.getKeyChar() == '¿' || evt.getKeyChar() == '?' || evt.getKeyChar() == '¡' || evt.getKeyChar() == 'ñ' || evt.getKeyChar() == '¨') {
             this.sendEventToManager("INSERT", c, areaTexto.getCaretPosition());
         }
         else if (evt.getKeyCode() == KeyEvent.VK_DELETE){
-            guardaFilas();
             txtNumLineas.setText("");
-            numLin = 1;
-
             if (!(lastText.equals("") && areaTexto.getText().equals("") )){
                 if (areaTexto.getText().length() != areaTexto.getCaretPosition()){
                     int pos = areaTexto.getCaretPosition()+1;
@@ -481,35 +476,15 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                 }
             }
             lastText = areaTexto.getText();
-            for (String s : filas) {
-                txtNumLineas.append(numLin + "\n");
-                numLin++;
-            }
-            numLin--;
-            if (areaTexto.getText().equals("")) {
-                txtNumLineas.append(1 + "\n");
-                numLin = 1;
-            }
-        }
+         }
         else if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            guardaFilas();
             txtNumLineas.setText("");
-            numLin = 1;
-
             if (areaTexto.getCaretPosition() != 0){
                 int pos = areaTexto.getCaretPosition();
                 this.sendEventToManager("DELETE", c, pos );
             }
             lastText = areaTexto.getText();
-            for (String s : filas) {
-                txtNumLineas.append(numLin + "\n");
-                numLin++;
-            }
-            numLin--;
-            if (areaTexto.getText().equals("")) {
-                txtNumLineas.append(1 + "\n");
-                numLin = 1;
-            }
+
         }
     }
 
@@ -562,7 +537,7 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
                                 executeRemoteOperation(op);
                                 }
                             else{
-                                sleep(5);
+                                sleep(4);
                             }
                         }
                         else{
@@ -586,7 +561,6 @@ public class Principal extends javax.swing.JFrame implements ActionListener {
             areaTexto.insert(operation.getObj().getObj(), operation.getPosition());
         }
         else{
-            guardaFilas();
             if (!areaTexto.equals("")){
                 try {
                     areaTexto.getDocument().remove(operation.getPosition() - 1, 1);
