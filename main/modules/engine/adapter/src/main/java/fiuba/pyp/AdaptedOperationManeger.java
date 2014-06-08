@@ -92,7 +92,10 @@ public class AdaptedOperationManeger {
                         //Intenta obtener la proxima operacion remota, si no encuentra espera (simula latencia)
                         Operation op = remoteOperationHandler.getNextRemoteOperation();
                         if (op != null){
-                            localOperationHandler.addOperationEvent(addressDomain.getConcurrencyControl().runOperation(op));
+                            op = addressDomain.getConcurrencyControl().runOperation(op);
+                            if (!op.isIdentity()){
+                                localOperationHandler.addOperationEvent(op);
+                            }
                             initializeCount(); incrementCount();
                         }
                         else{

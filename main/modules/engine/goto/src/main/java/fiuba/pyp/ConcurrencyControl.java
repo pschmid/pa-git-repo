@@ -18,6 +18,7 @@ public class ConcurrencyControl {
 
 	private static ConcurrencyControl INSTANCE = null;
     private HistoryBuffer buffer;
+    private int globalTimeStamp;
 
     // Private constructor suppresses 
     private ConcurrencyControl(){
@@ -39,6 +40,7 @@ public class ConcurrencyControl {
     private void initialize(){
     	this.algorithm = new GOTOAlgorithm();
         this.buffer = new HistoryBuffer();
+        this.globalTimeStamp = 1;
     }
     
     private Document doc;
@@ -66,7 +68,15 @@ public class ConcurrencyControl {
 
     public synchronized Operation runOperation(Operation operation){
         Operation transOp = algorithm.run(operation,this.buffer);
-        this.buffer.add(transOp);
+        if (!transOp.isIdentity()) {
+            this.buffer.add(transOp);
+        }
+        else {
+            Logger log = Logger.getLogger(App.class);
+            log.info("IDENTIDAD: " + transOp.toString());
+            this.buffer.add(transOp);
+        }
+        globalTimeStamp++;
         return transOp;
     }
 
@@ -88,15 +98,6 @@ public class ConcurrencyControl {
             }
         }
     }*/
-
-    public void printHistoryBuffer(){
-        Logger log = Logger.getLogger(App.class);
-        for (Operation op : this.buffer.getBuffer()){
-            log.info(op.getType()+ " " + op.getObj().getObj()+ " " + op.getPosition() + " time: "
-            + op.getTimeStamp());
-
-        }
-    }
 
     public void clearHistoryBuffer(){
         this.buffer.getBuffer().clear();
