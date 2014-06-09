@@ -93,9 +93,9 @@ public class AdaptedOperationManeger {
                         Operation op = remoteOperationHandler.getNextRemoteOperation();
                         if (op != null){
                             op = addressDomain.getConcurrencyControl().runOperation(op);
-                            if (!op.isIdentity()){
-                                localOperationHandler.addOperationEvent(op);
-                            }
+                            //if (!op.isIdentity()){
+                            localOperationHandler.addOperationEvent(op);
+                            //}
                             initializeCount(); incrementCount();
                         }
                         else{

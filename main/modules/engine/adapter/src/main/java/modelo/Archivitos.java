@@ -73,6 +73,8 @@ public class Archivitos {
                     while ((s = leer.readLine()) != null) {
                         cad += s + "\n";
                     }
+                    if (cad.length() > 0)
+                        cad = cad.substring(0, cad.length()-1);
                     leer.close();
                 }
             }else {JOptionPane.showMessageDialog(null, "Solo se permiten archivos con extension *.txt");}
